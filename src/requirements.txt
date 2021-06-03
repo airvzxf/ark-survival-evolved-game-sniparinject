@@ -1,0 +1,4 @@
+PyYAML>=5.4.1
+mock-open>=1.4.0
+pytest>=6.2.4
+coverage>=5.5
