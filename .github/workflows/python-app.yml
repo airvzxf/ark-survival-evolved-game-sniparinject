@@ -35,15 +35,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pwd
-          cd ./src/
-          pwd
-          ls -lha
+          cd ./src
           python -m pip install --upgrade pip
-          if [ -f .requirements.txt ]; then
+          if [ -f requirements.txt ]; then
             echo ""
             echo "=== Python: Install requirements from file ==="
-            pip install -r .requirements.txt
+            pip install -r requirements.txt
           else
             echo ""
             echo "=== Python: Install default dependencies ==="
@@ -52,38 +49,15 @@ jobs:
 
       - name: PyLint -> Analyze the code
         run: |
-          pwd
-          cd ./src/
-          pwd
-          ls -lha
+          cd ./src
           pylint `ls -R|grep .py$|xargs`
 
       - name: Flake8 -> Lint
         run: |
-          pwd
-          cd ./src/
-          pwd
-          ls -lha
+          cd ./src
           flake8 .
 
       - name: PyTest -> Test
         run: |
-          pwd
-          cd ./src/
-          pwd
-          ls -lha
-          echo ""
-          echo "--------------------"
-          pip list || true
-          echo ""
-          echo "--------------------"
-          pip3 list || true
-          echo ""
-          echo "--------------------"
-          python --version || true
-          echo ""
-          echo "--------------------"
-          pytest --version || true
-          echo ""
-          echo "--------------------"
+          cd ./src
           pytest .
