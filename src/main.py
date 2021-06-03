@@ -1,7 +1,9 @@
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
+#!/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+"""
+ARK Game: Read the network packages is an effort to use WireShark and scan the package to know
+your current position and get more information in the play game.
+"""
 
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    print("Hello World!")
