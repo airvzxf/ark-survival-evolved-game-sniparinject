@@ -1,4 +1,4 @@
-name: Python
+name: Python App
 # More information in:
 # https://docs.github.com/en/actions/guides/building-and-testing-python
 
@@ -21,17 +21,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-
-#      - name: CodeQL -> Initialize
-#        uses: github/codeql-action/init@v1
-#        with:
-#          languages: python
-#
-#      - name: CodeQL -> Autobuild
-#        uses: github/codeql-action/autobuild@v1
-#
-#      - name: CodeQL -> Perform analysis
-#        uses: github/codeql-action/analyze@v1
 
       - name: Install dependencies
         run: |

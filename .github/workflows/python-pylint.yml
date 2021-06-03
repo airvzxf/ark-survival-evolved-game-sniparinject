@@ -1,0 +1,24 @@
+name: PyLint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  Perform:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up
+        uses: airvzxf/ark-game-github-actions-setup@main
+
+      - name: Analyze the code
+        run: |
+          cd ./src
+          pylint main.py core/*.py
