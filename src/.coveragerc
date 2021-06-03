@@ -1,5 +1,5 @@
 [run]
-command_line = -m pytest -vvv -r fEsw --color=yes --code-highlight=yes
+command_line = -m pytest
 branch = True
 source = .
 omit =
@@ -10,8 +10,10 @@ omit =
 fail_under = 100
 precision = 2
 show_missing = True
-;exclude_lines =
-;    if __name__ == .__main__.:
+skip_covered = False
+skip_empty = False
+exclude_lines =
+    if __name__ == .__main__.:
 
 [html]
 title = App Python - Coverage report
