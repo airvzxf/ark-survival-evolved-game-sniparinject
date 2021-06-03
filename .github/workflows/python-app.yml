@@ -1,0 +1,49 @@
+name: Python application
+# More information in:
+# https://docs.github.com/en/actions/guides/building-and-testing-python
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+          with:
+            languages: python
+      - name: Perform CodeQL Analysis
+          uses: github/codeql-action/analyze@v1
+      - name: Install dependencies
+        run: |
+          cd ./src/
+          python -m pip install --upgrade pip
+          pip install flake8 pylint pytest
+          if [ -f .requirements.txt ]; then pip install -r .requirements.txt; fi
+      - name: Analysing the code with pylint
+        run: |
+          cd ./src/
+          pylint `ls -R|grep .py$|xargs`
+      - name: Lint with flake8
+        run: |
+          cd ./src/
+          # Stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with pytest
+        run: |
+          cd ./src/
+          pytest
