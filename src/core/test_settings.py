@@ -19,9 +19,7 @@ class TestSettings:
         # Act
         settings = Settings(config_file_expected)
         # Assert
-        print(settings.config_file)
-        assert False
-        # assert settings.config_file == config_file_expected
+        assert settings.config_file == config_file_expected
 
     def test_get_dictionary(self):
         with patch('builtins.open', MockOpen()):
