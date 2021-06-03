@@ -29,7 +29,7 @@ class TestSettings:
             with open(file_name, 'w') as handle:
                 yaml_content = dump(expected)
                 handle.write(yaml_content)
-            with open(file_name, 'r') as handle:
+            with open(file_name, 'r'):
                 # Act
                 settings = Settings(file_name).get_dictionary()
                 # Assert
@@ -47,7 +47,7 @@ class TestSettings:
         with patch('builtins.open', MockOpen()):
             # Arrange
             file_name = '/hck/it/yaml-settings.yml'
-            with open(file_name, 'r') as handle:
+            with open(file_name, 'r'):
                 try:
                     # Act
                     Settings(file_name).get_dictionary()
