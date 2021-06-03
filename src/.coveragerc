@@ -1,0 +1,18 @@
+[run]
+command_line = -m pytest -vvv -r fEsw --color=yes --code-highlight=yes
+branch = True
+source = .
+omit =
+    venv/*
+    test_bdd/*
+
+[report]
+fail_under = 100
+precision = 2
+show_missing = True
+;exclude_lines =
+;    if __name__ == .__main__.:
+
+[html]
+title = App Python - Coverage report
+skip_empty = False

@@ -61,3 +61,10 @@ jobs:
         run: |
           cd ./src
           pytest .
+
+      - name: Coverage -> Code
+        run: |
+          cd ./src
+          coverage run
+          coverage html
+          coverage report
