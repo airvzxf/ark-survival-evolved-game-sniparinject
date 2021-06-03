@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Build:
+  Perform:
 
     runs-on: ubuntu-latest
 
@@ -48,12 +48,9 @@ jobs:
       - name: Flake8 -> Lint
         run: |
           cd ./src/
-          # Stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          flake8 .
 
-#      - name: PyTest -> Test
-#        run: |
-#          cd ./src/
-#          pytest
+      - name: PyTest -> Test
+        run: |
+          cd ./src/
+          pytest .
