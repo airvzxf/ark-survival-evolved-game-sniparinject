@@ -5,8 +5,8 @@ Unit Test.
 """
 from unittest.mock import patch
 
-from _pytest.python_api import raises
 from mock_open import MockOpen
+from pytest import raises
 from yaml import dump
 
 from core.settings import Settings
