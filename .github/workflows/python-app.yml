@@ -1,4 +1,4 @@
-name: Python application
+name: Python
 # More information in:
 # https://docs.github.com/en/actions/guides/building-and-testing-python
 
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  Build:
 
     runs-on: ubuntu-latest
 
