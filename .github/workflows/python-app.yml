@@ -22,23 +22,26 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: CodeQL -> Initialize
-        uses: github/codeql-action/init@v1
-        with:
-          languages: python
-
-      - name: CodeQL -> Autobuild
-        uses: github/codeql-action/autobuild@v1
-
-      - name: CodeQL -> Perform analysis
-        uses: github/codeql-action/analyze@v1
+#      - name: CodeQL -> Initialize
+#        uses: github/codeql-action/init@v1
+#        with:
+#          languages: python
+#
+#      - name: CodeQL -> Autobuild
+#        uses: github/codeql-action/autobuild@v1
+#
+#      - name: CodeQL -> Perform analysis
+#        uses: github/codeql-action/analyze@v1
 
       - name: Install dependencies
         run: |
           cd ./src/
           python -m pip install --upgrade pip
-          pip install flake8 pylint pytest
-          if [ -f .requirements.txt ]; then pip install -r .requirements.txt; fi
+          if [ -f .requirements.txt ]; then
+            pip install -r .requirements.txt
+          else
+            pip install flake8 pylint pytest
+          fi
 
       - name: PyLint -> Analyze the code
         run: |
