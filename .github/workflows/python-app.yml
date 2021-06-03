@@ -50,7 +50,7 @@ jobs:
       - name: PyLint -> Analyze the code
         run: |
           cd ./src
-          pylint `ls -R|grep .py$|xargs`
+          pylint main.py core/*.py
 
       - name: Flake8 -> Lint
         run: |
