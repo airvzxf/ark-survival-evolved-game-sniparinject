@@ -3,11 +3,14 @@
 """
 Start to sniff of the network.
 """
-from scapy.compat import raw
-from scapy.layers.inet import TCP, IP
+from importlib import reload
+
+from scapy.layers.inet import TCP
 from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 from scapy.sendrecv import sniff
+
+from core.game import mana_plus
 
 
 class SnifferNetwork:
@@ -53,8 +56,7 @@ class SnifferNetwork:
             count=0,
             prn=self._sniff_data)
 
-    @staticmethod
-    def _sniff_data(packet: Ether) -> None:
+    def _sniff_data(self, packet: Ether) -> None:
         """
         Process data provided by the Sniffer.
 
@@ -65,16 +67,8 @@ class SnifferNetwork:
         :return: Nothing.
         """
         if packet.haslayer(TCP) and packet.haslayer(Raw):
-            ip_layer = packet.getlayer(IP)
-            tcp_layer = packet.getlayer(TCP)
-            raw_layer = packet.getlayer(Raw)
-
-            print()
-            print(f'--->'
-                  f' | Src {ip_layer.src}:{ip_layer.sport}'
-                  f' | Dst {ip_layer.dst}:{ip_layer.dport}'
-                  f' | IP length: {len(ip_layer)}'
-                  f' | TCP length: {len(tcp_layer)}'
-                  f' | RAW length: {len(raw_layer)}'
-                  )
-            print(f'RAW: {raw(raw_layer).hex()}')
+            try:
+                reload(mana_plus)
+                mana_plus.ManaPlus(self.host, packet)
+            except Exception as error:
+                print(error)
