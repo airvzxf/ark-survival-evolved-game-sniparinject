@@ -39,6 +39,10 @@ class ManaPlus:
         self.raw_data = raw(raw_layer)
         self.raw_data_copy = raw(raw_layer)
 
+        self.host_actions = {
+            0x80: self._host_npc_monster_check,
+        }
+
         self.node_actions = {
             0x7d: self._node_scenario_change,
             0x85: self._node_player_move_to,
@@ -66,8 +70,7 @@ class ManaPlus:
 
         source = ip_layer.src
         if host == source:
-            # self._from_host()
-            pass
+            self._from_host()
         else:
             self._from_node()
 
@@ -78,7 +81,25 @@ class ManaPlus:
         :rtype: None
         :return: Nothing.
         """
-        print(f'Host: {self.raw_data.hex()}')
+        if len(self.raw_data_copy) == 0:
+            return
+
+        id_package, = unpack('<h', self._get_data(2))
+        if id_package in self.host_actions.keys():
+            message = self.host_actions.get(id_package)()
+            self._display_message(message)
+        else:
+            self.display_info = False
+            if self.display_info:
+                id_hex = hex(id_package)
+                print('HOST'
+                      f' | ID {id_hex}'
+                      f' | {self.raw_data.hex()}'
+                      )
+            return
+
+        if len(self.raw_data_copy) > 0:
+            self._from_host()
 
     def _from_node(self) -> None:
         """
@@ -98,7 +119,7 @@ class ManaPlus:
             self.display_info = True
             if self.display_info:
                 id_hex = hex(id_package)
-                print('***'
+                print('NODE'
                       f' | ID {id_hex}'
                       f' | {self.raw_data.hex()}'
                       )
@@ -350,3 +371,18 @@ class ManaPlus:
         :return: Message of this action.
         """
         return '--> Communicate with the server [0x210]'
+
+    def _host_npc_monster_check(self) -> str:
+        """
+        Check the specific NPC monster.
+
+        :rtype: str
+        :return: Message of this action.
+        """
+        id_npc, unknown_1, = unpack('<Ic', self._get_data(5))
+        id_npc = hex(id_npc).zfill(10)
+        unknown_1 = unknown_1.hex()
+
+        return '<-- NPC Monster Check' \
+               f' | ID {id_npc}' \
+               f' | Unknown {unknown_1}'
