@@ -13,6 +13,7 @@ from scapy.sendrecv import sniff
 from core.game import mana_plus
 
 
+# pylint: disable=too-few-public-methods
 class SnifferNetwork:
     """
     Init sniff of the network for spy the packages.
@@ -67,8 +68,9 @@ class SnifferNetwork:
         :return: Nothing.
         """
         if packet.haslayer(TCP) and packet.haslayer(Raw):
+            # pylint: disable=broad-except
             try:
                 reload(mana_plus)
                 mana_plus.ManaPlus(self.host, packet)
             except Exception as error:
-                print(error)
+                print(f'Error: {error}')

@@ -6,6 +6,7 @@ Given a YAML file it get the settings and return a dictionary with them.
 from yaml import load, FullLoader
 
 
+# pylint: disable=too-few-public-methods
 class Settings:
     """
     Parse the configuration file and return the settings.

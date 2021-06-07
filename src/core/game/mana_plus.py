@@ -157,7 +157,7 @@ class ManaPlus:
         :return: Nothing
         """
         if self.display_info:
-            print(f'--> NPC was killed')
+            print('--> NPC was killed')
 
     def _node_player_pickup_item(self) -> None:
         """

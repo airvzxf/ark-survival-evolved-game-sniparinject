@@ -129,5 +129,5 @@ jobs:
         run: |
           cd ./src
           coverage run
-          coverage html
           coverage report
+          coverage html 1>/dev/null
