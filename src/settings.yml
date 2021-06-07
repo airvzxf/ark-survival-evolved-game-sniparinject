@@ -1,2 +1,6 @@
 Network:
   interface: enp4s0
+
+Server:
+  host: 52.174.196.146
+  port: 5122
