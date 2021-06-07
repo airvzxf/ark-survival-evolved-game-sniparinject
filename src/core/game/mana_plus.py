@@ -32,7 +32,7 @@ class ManaPlus:
         """
         self.host = host
         self.packet = packet
-        self.display_info = False
+        self.display_info = True
 
         ip_layer = packet.getlayer(IP)
         raw_layer = packet.getlayer(Raw)
@@ -92,12 +92,13 @@ class ManaPlus:
 
         id_package, = unpack('<h', self._get_data(2))
         if id_package in self.node_actions.keys():
-            self.node_actions.get(id_package)()
+            message = self.node_actions.get(id_package)()
+            self._display_message(message)
         else:
             self.display_info = True
             if self.display_info:
                 id_hex = hex(id_package)
-                print(f'***'
+                print('***'
                       f' | ID {id_hex}'
                       f' | {self.raw_data.hex()}'
                       )
@@ -122,26 +123,37 @@ class ManaPlus:
 
         return data
 
-    def _node_player_move_to(self) -> None:
+    def _display_message(self, message: str) -> None:
+        """
+        Print message in the console.
+
+        :type message: str
+        :param message: Size of data which will split.
+
+        :rtype: None
+        :return: Nothing.
+        """
+        if self.display_info:
+            print(message)
+
+    def _node_player_move_to(self) -> str:
         """
         Player moves to specific position.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         position_1, position_2, position_3 = unpack('<ccc', self._get_data(3))
 
-        if self.display_info:
-            print(f'--> Player move to'
-                  f' | {position_1.hex()} {position_2.hex()} {position_3.hex()}'
-                  )
+        return '--> Player move to' \
+               f' | {position_1.hex()} {position_2.hex()} {position_3.hex()}'
 
-    def _node_player_action(self) -> None:
+    def _node_player_action(self) -> str:
         """
         Player Action.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_target = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
         action_id, = unpack('<B', self._get_data(1))
@@ -152,148 +164,130 @@ class ManaPlus:
         )
 
         self.display_info = True
-        if self.display_info:
-            print(f'--> Player action'
-                  f' | Target {id_target}'
-                  f' | ID {hex(action_id)}{action_description}'
-                  )
+        return '--> Player action' \
+               f' | Target {id_target}' \
+               f' | ID {hex(action_id)}{action_description}'
 
-    def _node_npc_killed(self) -> None:
+    @staticmethod
+    def _node_npc_killed() -> str:
         """
         The NPC (Non-Player Character) was killed.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
-        if self.display_info:
-            print('--> NPC was killed')
+        return '--> NPC was killed'
 
-    def _node_player_pickup_item(self) -> None:
+    def _node_player_pickup_item(self) -> str:
         """
         Player pick up an item.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         action_id, = unpack('<B', self._get_data(1))
         unknown_1, unknown_2, unknown_3 = unpack('<ccc', self._get_data(3))
 
         self.display_info = True
-        if self.display_info:
-            print(f'--> Player pick up an item'
-                  f' | ID {hex(action_id)}'
-                  f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
-                  )
+        return '--> Player pick up an item' \
+               f' | ID {hex(action_id)}' \
+               f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
 
-    def _node_character_visible(self) -> None:
+    def _node_character_visible(self) -> str:
         """
         The character is visible for me.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_target = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
 
-        if self.display_info:
-            print(f'--> Character visible'
-                  f' | ID {id_target}'
-                  )
+        return '--> Character visible' \
+               f' | ID {id_target}'
 
-    def _node_unknown_1_npc_monster_or_dropped_items(self) -> None:
+    def _node_unknown_1_npc_monster_or_dropped_items(self) -> str:
         """
         Something is sending to the server related to the NPC Monsters or dropped items.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         unknown_1, unknown_2, unknown_3 = unpack('<ccc', self._get_data(3))
 
         self.display_info = True
-        if self.display_info:
-            print(f'--> Unknown 1 --> Related NPC Monsters or dropped Items'
-                  f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
-                  )
+        return '--> Unknown 1 --> Related NPC Monsters or dropped Items' \
+               f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
 
-    def _node_npc_dialog_open(self) -> None:
+    def _node_npc_dialog_open(self) -> str:
         """
         Start to talk with an NPC, the dialog is open.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
         sub_dialog, = unpack('<c', self._get_data(1))
 
-        if self.display_info:
-            print(f'--> NPC Dialog open'
-                  f' | ID {id_dialog}'
-                  f' | Sub-dialog {sub_dialog.hex()}'
-                  )
+        return '--> NPC Dialog open' \
+               f' | ID {id_dialog}' \
+               f' | Sub-dialog {sub_dialog.hex()}'
 
-    def _node_npc_dialog_next(self) -> None:
+    def _node_npc_dialog_next(self) -> str:
         """
         Talking with an NPC, display next dialog.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
 
-        if self.display_info:
-            print(f'--> NPC Dialog next'
-                  f' | ID {id_dialog}'
-                  )
+        return '--> NPC Dialog next' \
+               f' | ID {id_dialog}'
 
-    def _node_npc_dialog_option_display(self) -> None:
+    def _node_npc_dialog_option_display(self) -> str:
         """
         Talking with an NPC, display new dialog based on the selected option.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
         sub_dialog, = unpack('<c', self._get_data(1))
 
-        if self.display_info:
-            print(f'--> NPC Dialog conversation'
-                  f' | ID {id_dialog}'
-                  f' | Sub-dialog {sub_dialog.hex()}'
-                  )
+        return '--> NPC Dialog conversation' \
+               f' | ID {id_dialog}' \
+               f' | Sub-dialog {sub_dialog.hex()}'
 
-    def _node_npc_dialog_close(self) -> None:
+    def _node_npc_dialog_close(self) -> str:
         """
         Talking with an NPC, the dialog is close.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
 
-        if self.display_info:
-            print(f'--> NPC Dialog close'
-                  f' | ID {id_dialog}'
-                  )
+        return '--> NPC Dialog close' \
+               f' | ID {id_dialog}'
 
-    def _node_shop_store(self) -> None:
+    def _node_shop_store(self) -> str:
         """
         Open the shop storage.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
 
-        if self.display_info:
-            print(f'--> Shop store'
-                  f' | ID {id_dialog}'
-                  )
+        return '--> Shop store' \
+               f' | ID {id_dialog}'
 
-    def _node_shop_buy_item(self) -> None:
+    def _node_shop_buy_item(self) -> str:
         """
         Buy an item.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         unknown_1, unknown_2, quantity, id_item, = unpack('<ccHH', self._get_data(6))
         unknown_1 = unknown_1.hex()
@@ -301,19 +295,17 @@ class ManaPlus:
         id_item = hex(id_item).zfill(6)
 
         self.display_info = True
-        if self.display_info:
-            print(f'--> Shop buy item'
-                  f' | Unknown {unknown_1} {unknown_2}'
-                  f' | Quantity {quantity}'
-                  f' | ID {id_item}'
-                  )
+        return '--> Shop buy item' \
+               f' | Unknown {unknown_1} {unknown_2}' \
+               f' | Quantity {quantity}' \
+               f' | ID {id_item}'
 
-    def _node_shop_shell_item(self) -> None:
+    def _node_shop_shell_item(self) -> str:
         """
         Shell an item.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         unknown_1, unknown_2, id_item, quantity, = unpack('<ccHH', self._get_data(6))
         unknown_1 = unknown_1.hex()
@@ -321,45 +313,40 @@ class ManaPlus:
         id_item = hex(id_item).zfill(6)
 
         self.display_info = True
-        if self.display_info:
-            print(f'--> Shop shell item'
-                  f' | Unknown {unknown_1} {unknown_2}'
-                  f' | ID {id_item}'
-                  f' | Quantity {quantity}'
-                  )
+        return '--> Shop shell item' \
+               f' | Unknown {unknown_1} {unknown_2}' \
+               f' | ID {id_item}' \
+               f' | Quantity {quantity}'
 
-    def _node_scenario_change(self) -> None:
+    @staticmethod
+    def _node_scenario_change() -> str:
         """
         The scenario was changed.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
-        self.display_info = True
-        if self.display_info:
-            print(f'--> Scenario change')
+        return '--> Scenario change'
 
-    def _node_connect_server_constant_1(self) -> None:
+    def _node_connect_server_constant_1(self) -> str:
         """
         The node is communicate with the server constantly.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
         unknown_1, = unpack('<c', self._get_data(1))
         unknown_1 = unknown_1.hex()
 
-        if self.display_info:
-            print(f'--> Communicate with the server [0xbf]'
-                  f' | Unknown {unknown_1}'
-                  )
+        return '--> Communicate with the server [0xbf]' \
+               f' | Unknown {unknown_1}'
 
-    def _node_connect_server_constant_2(self) -> None:
+    @staticmethod
+    def _node_connect_server_constant_2() -> str:
         """
         The node is communicate with the server constantly but not frequently.
 
-        :rtype: None
-        :return: Nothing
+        :rtype: str
+        :return: Message of this action.
         """
-        if self.display_info:
-            print(f'--> Communicate with the server [0x210]')
+        return '--> Communicate with the server [0x210]'
