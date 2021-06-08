@@ -5,6 +5,7 @@ Manage the host connection of Mana Plus.
 """
 from struct import unpack
 
+from core.game.text_style import TextStyle
 from core.game.utility import Utility
 
 
@@ -59,9 +60,15 @@ class ManaPlusHost(Utility):
         id_npc = hex(id_npc).zfill(10)
         unknown_1 = unknown_1.hex()
 
-        return '<-- NPC Monster Check' \
-               f' | ID {id_npc}' \
-               f' | Unknown {unknown_1}'
+        message = self.text_format('<-- NPC Monster Check', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_npc}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1}', TextStyle.LIGHT)
+
+        return message
 
     def _player_move(self) -> str:
         """
@@ -82,10 +89,18 @@ class ManaPlusHost(Utility):
         unknown_5 = unknown_5.hex()
         unknown_6 = unknown_6.hex()
 
-        return '<-- Player move to' \
-               f' | ID {id_move}' \
-               f' | XY {unknown_1}{unknown_2}{unknown_3}{unknown_4}{unknown_5}' \
-               f' | Unknown {unknown_6}'
+        message = self.text_format('<-- Player move to', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_move}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' XY', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1}{unknown_2}{unknown_3}{unknown_4}{unknown_5}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_6}', TextStyle.LIGHT)
+
+        return message
 
     def _npc_monster_move_to(self) -> str:
         """
@@ -113,24 +128,40 @@ class ManaPlusHost(Utility):
         unknown_21 = unknown_21.hex()
         unknown_23 = unknown_23.hex()
 
+        message = self.text_format('<-- NPC Move', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {monster_id}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_2_1} {unknown_2_2}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_3} {unknown_4}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {monster_type}', TextStyle.BOLD)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_6} {unknown_7}', TextStyle.LIGHT)
+        message += self.text_format(f' {unknown_8} {unknown_9}', TextStyle.LIGHT)
+        message += self.text_format(f' {unknown_10}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' HP', TextStyle.BOLD)
+        message += self.text_format(f' {hp_current}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_12}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' HP Max', TextStyle.BOLD)
+        message += self.text_format(f' {hp_max}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_14} {unknown_15}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_16}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' XY', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_17}{unknown_18}{unknown_19}{unknown_20}{unknown_21}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_22} {unknown_23}', TextStyle.LIGHT)
+
         # self.display_info = True
-        return '<-- NPC Move' \
-               f' | ID {monster_id}' \
-               f' | {unknown_2_1} {unknown_2_2}' \
-               f' | {unknown_3}' \
-               f' {unknown_4}' \
-               f' | {monster_type}' \
-               f' | {unknown_6} {unknown_7}' \
-               f' {unknown_8} {unknown_9}' \
-               f' {unknown_10}' \
-               f' | HP {hp_current}' \
-               f' | {unknown_12}' \
-               f' | HP Max {hp_max}' \
-               f' | {unknown_14} {unknown_15}' \
-               f' | {unknown_16}' \
-               f' | XY {unknown_17}{unknown_18}{unknown_19}{unknown_20}{unknown_21}' \
-               f' | {unknown_22}' \
-               f' {unknown_23}'
+        return message
 
     def _fight(self) -> str:
         """
@@ -149,19 +180,35 @@ class ManaPlusHost(Utility):
         physical_attack = str(physical_attack).rjust(4, ' ')
         unknown_7 = unknown_7.hex()
 
+        message = self.text_format('<-- Fight', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' Attacker', TextStyle.BOLD)
+        message += self.text_format(f' {attacker_id}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Target', TextStyle.BOLD)
+        message += self.text_format(f' {target_id}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_1}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {hp_1}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_2}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {hp_2}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_3}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Attack', TextStyle.BOLD)
+        message += self.text_format(f' {physical_attack}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_5}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_6}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_7}', TextStyle.LIGHT)
+
         # self.display_info = True
-        return '<-- Fight' \
-               f' | Attacker {attacker_id}' \
-               f' | Target {target_id}' \
-               f' | {unknown_1}' \
-               f' | ?? {hp_1}' \
-               f' | {unknown_2}' \
-               f' | ?? {hp_2}' \
-               f' | {unknown_3}' \
-               f' | Attack {physical_attack}' \
-               f' | {unknown_5}' \
-               f' | {unknown_6}' \
-               f' | {unknown_7}'
+        return message
 
     def _npc_info(self) -> str:
         """
@@ -187,21 +234,37 @@ class ManaPlusHost(Utility):
         unknown_1_1 = unknown_1_1.hex()
         unknown_1_2 = unknown_1_2.hex()
 
+        message = self.text_format('<-- NPC Info', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {target_id}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_1_1} {unknown_1_2}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_2} {unknown_3}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {monster_type}', TextStyle.BOLD)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_4}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_5}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' HP', TextStyle.BOLD)
+        message += self.text_format(f' {hp_current}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_6}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' HP Max', TextStyle.BOLD)
+        message += self.text_format(f' {hp_max}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_7} {unknown_8}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_9}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' XY', TextStyle.BOLD)
+        message += self.text_format(f' {position_1}{position_2}{position_3}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(f' {unknown_10} {unknown_11}', TextStyle.LIGHT)
+
         # self.display_info = True
-        return '<-- NPC Info' \
-               f' | ID {target_id}' \
-               f' | {unknown_1_1} {unknown_1_2}' \
-               f' | {unknown_2}' \
-               f' {unknown_3}' \
-               f' | {monster_type}' \
-               f' | {unknown_4}' \
-               f' {unknown_5}' \
-               f' | HP {hp_current}' \
-               f' | {unknown_6}' \
-               f' | HP Max {hp_max}' \
-               f' | {unknown_7}' \
-               f'  {unknown_8}' \
-               f' | {unknown_9}' \
-               f' | XY {position_1}{position_2}{position_3}' \
-               f' | {unknown_10}' \
-               f' {unknown_11}'
+        return message

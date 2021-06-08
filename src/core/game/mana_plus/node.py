@@ -5,6 +5,7 @@ Manage the node connection of Mana Plus.
 """
 from struct import unpack
 
+from core.game.text_style import TextStyle
 from core.game.utility import Utility
 
 
@@ -33,7 +34,7 @@ class ManaPlusNode(Utility):
             0x89: self._player_action,
             0x90: self._npc_dialog_open,
             0x94: self._character_visible,
-            0x9b: self._unknown_1_npc_monster_or_dropped_items,
+            0x9b: self._player_smash_with_object,
             0x9f: self._player_pickup_item,
             0xb8: self._npc_dialog_option_display,
             0xb9: self._npc_dialog_next,
@@ -65,9 +66,15 @@ class ManaPlusNode(Utility):
         :return: Message of this action.
         """
         position_1, position_2, position_3 = unpack('<ccc', self._get_data(3))
+        position_1 = position_1.hex()
+        position_2 = position_2.hex()
+        position_3 = position_3.hex()
 
-        return '--> Player move to' \
-               f' | {position_1.hex()}{position_2.hex()}{position_3.hex()}'
+        message = self.text_format('--> Player move to', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(f' {position_1}{position_2}{position_3}', TextStyle.LIGHT)
+
+        return message
 
     def _player_action(self) -> str:
         """
@@ -85,20 +92,25 @@ class ManaPlusNode(Utility):
         )
         action_id = hex(action_id)
 
-        self.display_info = True
-        return '--> Player action' \
-               f' | Target {id_target}' \
-               f' | ID {action_id}{action_description}'
+        message = self.text_format('--> Player action', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' Target', TextStyle.BOLD)
+        message += self.text_format(f' {id_target}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {action_id}{action_description}', TextStyle.LIGHT)
 
-    @staticmethod
-    def _npc_killed() -> str:
+        self.display_info = True
+        return message
+
+    def _npc_killed(self) -> str:
         """
         The NPC (Non-Player Character) was killed.
 
         :rtype: str
         :return: Message of this action.
         """
-        return '--> NPC was killed'
+        return self.text_format('--> NPC was killed', TextStyle.TITLE)
 
     def _player_pickup_item(self) -> str:
         """
@@ -113,10 +125,16 @@ class ManaPlusNode(Utility):
         unknown_2 = unknown_2.hex()
         unknown_3 = unknown_3.hex()
 
+        message = self.text_format('--> Player pick up an item', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {action_id}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1} {unknown_2} {unknown_3}', TextStyle.LIGHT)
+
         # self.display_info = True
-        return '--> Player pick up an item' \
-               f' | ID {action_id}' \
-               f' | Unknown {unknown_1} {unknown_2} {unknown_3}'
+        return message
 
     def _character_visible(self) -> str:
         """
@@ -128,12 +146,16 @@ class ManaPlusNode(Utility):
         id_target, = unpack('<I', self._get_data(4))
         id_target = hex(id_target).zfill(10)
 
-        return '--> Character visible' \
-               f' | ID {id_target}'
+        message = self.text_format('--> Character visible', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_target}', TextStyle.LIGHT)
 
-    def _unknown_1_npc_monster_or_dropped_items(self) -> str:
+        return message
+
+    def _player_smash_with_object(self) -> str:
         """
-        Something is sending to the server related to the NPC Monsters or dropped items.
+        Player smash with an object.
 
         :rtype: str
         :return: Message of this action.
@@ -143,9 +165,13 @@ class ManaPlusNode(Utility):
         unknown_2 = unknown_2.hex()
         unknown_3 = unknown_3.hex()
 
+        message = self.text_format('--> Player Smash with object', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1} {unknown_2} {unknown_3}', TextStyle.LIGHT)
+
         # self.display_info = True
-        return '--> Unknown 3 --> Related NPC Monsters or dropped Items' \
-               f' | Unknown {unknown_1} {unknown_2} {unknown_3}'
+        return message
 
     def _npc_dialog_open(self) -> str:
         """
@@ -158,9 +184,15 @@ class ManaPlusNode(Utility):
         id_dialog = hex(id_dialog).zfill(10)
         sub_dialog, = sub_dialog.hex()
 
-        return '--> NPC Dialog open' \
-               f' | ID {id_dialog}' \
-               f' | Sub-dialog {sub_dialog}'
+        message = self.text_format('--> NPC Dialog open', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_dialog}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Sub-dialog', TextStyle.BOLD)
+        message += self.text_format(f' {sub_dialog}', TextStyle.LIGHT)
+
+        return message
 
     def _npc_dialog_next(self) -> str:
         """
@@ -172,8 +204,12 @@ class ManaPlusNode(Utility):
         id_dialog, = unpack('<I', self._get_data(4))
         id_dialog = hex(id_dialog).zfill(10)
 
-        return '--> NPC Dialog next' \
-               f' | ID {id_dialog}'
+        message = self.text_format('--> NPC Dialog next', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_dialog}', TextStyle.LIGHT)
+
+        return message
 
     def _npc_dialog_option_display(self) -> str:
         """
@@ -186,9 +222,15 @@ class ManaPlusNode(Utility):
         id_dialog = hex(id_dialog).zfill(10)
         sub_dialog, = sub_dialog.hex()
 
-        return '--> NPC Dialog conversation' \
-               f' | ID {id_dialog}' \
-               f' | Sub-dialog {sub_dialog}'
+        message = self.text_format('--> NPC Dialog conversation', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_dialog}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Sub-dialog', TextStyle.BOLD)
+        message += self.text_format(f' {sub_dialog}', TextStyle.LIGHT)
+
+        return message
 
     def _npc_dialog_close(self) -> str:
         """
@@ -200,8 +242,12 @@ class ManaPlusNode(Utility):
         id_dialog, = unpack('<I', self._get_data(4))
         id_dialog = hex(id_dialog).zfill(10)
 
-        return '--> NPC Dialog close' \
-               f' | ID {id_dialog}'
+        message = self.text_format('--> NPC Dialog close', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_dialog}', TextStyle.LIGHT)
+
+        return message
 
     def _shop_store(self) -> str:
         """
@@ -213,8 +259,12 @@ class ManaPlusNode(Utility):
         id_dialog, = unpack('<I', self._get_data(4))
         id_dialog = hex(id_dialog).zfill(10)
 
-        return '--> Shop store' \
-               f' | ID {id_dialog}'
+        message = self.text_format('--> Shop store', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_dialog}', TextStyle.LIGHT)
+
+        return message
 
     def _shop_buy_item(self) -> str:
         """
@@ -228,11 +278,19 @@ class ManaPlusNode(Utility):
         unknown_1 = unknown_1.hex()
         unknown_2 = unknown_2.hex()
 
+        message = self.text_format('--> Shop buy item', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1} {unknown_2}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Quantity', TextStyle.BOLD)
+        message += self.text_format(f' {quantity}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_item}', TextStyle.LIGHT)
+
         # self.display_info = True
-        return '--> Shop buy item' \
-               f' | Unknown {unknown_1} {unknown_2}' \
-               f' | Quantity {quantity}' \
-               f' | ID {id_item}'
+        return message
 
     def _shop_shell_item(self) -> str:
         """
@@ -246,21 +304,28 @@ class ManaPlusNode(Utility):
         unknown_1 = unknown_1.hex()
         unknown_2 = unknown_2.hex()
 
-        # self.display_info = True
-        return '--> Shop shell item' \
-               f' | Unknown {unknown_1} {unknown_2}' \
-               f' | ID {id_item}' \
-               f' | Quantity {quantity}'
+        message = self.text_format('--> Shop shell item', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1} {unknown_2}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_item}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' Quantity', TextStyle.BOLD)
+        message += self.text_format(f' {quantity}', TextStyle.LIGHT)
 
-    @staticmethod
-    def _scenario_change() -> str:
+        # self.display_info = True
+        return message
+
+    def _scenario_change(self) -> str:
         """
         The scenario was changed.
 
         :rtype: str
         :return: Message of this action.
         """
-        return '--> Scenario change'
+        return self.text_format('--> Scenario change', TextStyle.TITLE)
 
     def _connect_server_constant_1(self) -> str:
         """
@@ -272,15 +337,18 @@ class ManaPlusNode(Utility):
         unknown_1, = unpack('<c', self._get_data(1))
         unknown_1 = unknown_1.hex()
 
-        return '--> Communicate with the server [0xbf]' \
-               f' | Unknown {unknown_1}'
+        message = self.text_format('--> Communicate with the server [0xbf]', TextStyle.TITLE)
+        message += self.text_format(' |')
+        message += self.text_format(' Unknown', TextStyle.BOLD)
+        message += self.text_format(f' {unknown_1}', TextStyle.LIGHT)
 
-    @staticmethod
-    def _connect_server_constant_2() -> str:
+        return message
+
+    def _connect_server_constant_2(self) -> str:
         """
         The node is communicate with the server constantly but not frequently.
 
         :rtype: str
         :return: Message of this action.
         """
-        return '--> Communicate with the server [0x210]'
+        return self.text_format('--> Communicate with the server [0x210]', TextStyle.TITLE)

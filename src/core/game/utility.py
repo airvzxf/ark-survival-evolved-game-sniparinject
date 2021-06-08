@@ -5,6 +5,8 @@ Utilities to handle the parse connection.
 """
 from struct import unpack
 
+from core.game.text_style import TextStyle
+
 
 class Utility:
     """
@@ -94,3 +96,67 @@ class Utility:
         """
         if self.display_info:
             print(message)
+
+    @staticmethod
+    def print_format_table() -> None:
+        """
+        Prints table with all the text format options.
+
+        :rtype: None
+        :return: Nothing.
+        """
+        style_range = [0, 1, 2, 3, 4, 7, 9, 21]
+        fg_color_rage = [30, 31, 32, 33, 34, 35, 36, 37, 90, 91, 92, 93, 94, 95, 96]
+        bg_color_rage = [40, 41, 42, 43, 44, 45, 46, 47, 100]
+        for style in style_range:
+            print()
+            print(f'Style: {str(style).zfill(2)}')
+            for fg in fg_color_rage:
+                s1 = ''
+                for bg in bg_color_rage:
+                    text_format = ';'.join([
+                        str(style).zfill(2), str(fg).zfill(2), str(bg).zfill(2)
+                    ])
+                    s1 += f'\x1b[{text_format}m {text_format} \x1b[0m'
+                print(s1)
+
+    def text_format(self, text: str, style: TextStyle = TextStyle.NORMAL) -> str:
+        """
+        Prints the text format for host output.
+
+        Style:
+        - NORMAL = '0'
+        - BOLD = '1'
+        - LIGHT = '2'
+        - ITALIC = '3'
+        - UNDERLINE = '4'
+        - SELECTED = '7'
+        - STRIKETHROUGH = '9'
+        - DOUBLE_UNDERLINE = '21'
+
+        :type text: str
+        :param text: The text which will be format.
+
+        :type style: TextStyle
+        :param style: Set the style of the text.
+
+        :rtype: str
+        :return: The format code.
+        """
+        format_code = ''
+
+        if style == TextStyle.TITLE:
+            format_code += '00;93;'
+
+        if style == TextStyle.NORMAL:
+            format_code += '00;30;'
+
+        if style == TextStyle.BOLD:
+            format_code += '01;30;'
+
+        if style == TextStyle.LIGHT:
+            format_code += '02;30;'
+
+        format_code += '44' if self.request == 'host' else '100'
+
+        return f'\x1b[{format_code}m{text}\x1b[0m'
