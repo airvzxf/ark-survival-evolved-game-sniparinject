@@ -41,14 +41,32 @@ class ManaPlus:
         self.raw_data_copy = raw(raw_layer)
 
         if host_ip == ip_layer.src:
-            try:
-                reload(host)
-                ManaPlusHost(self.raw_data)
-            except Exception as error:
-                print(f'Error: {error}')
+            self._start_host()
         else:
-            try:
-                reload(node)
-                ManaPlusNode(self.raw_data)
-            except Exception as error:
-                print(f'Error: {error}')
+            self._start_node()
+
+    def _start_host(self) -> None:
+        """
+        Start to process the host packages.
+
+        :rtype: None
+        :return: Nothing.
+        """
+        try:
+            reload(host)
+            ManaPlusHost(self.raw_data)
+        except Exception as error:
+            print(f'Error: {error}')
+
+    def _start_node(self) -> None:
+        """
+        Start to process the node packages.
+
+        :rtype: None
+        :return: Nothing.
+        """
+        try:
+            reload(node)
+            ManaPlusNode(self.raw_data)
+        except Exception as error:
+            print(f'Error: {error}')

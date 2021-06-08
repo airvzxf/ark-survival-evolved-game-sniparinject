@@ -95,8 +95,10 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_move, unknown_1, unknown_2, unknown_3, unknown_4, unknown_5, unknown_6 = unpack('<Icccccc',
-                                                                                           self._get_data(10))
+        (
+            id_move, unknown_1, unknown_2, unknown_3,
+            unknown_4, unknown_5, unknown_6
+        ) = unpack('<Icccccc', self._get_data(10))
         id_move = hex(id_move).zfill(10)
         unknown_1 = unknown_1.hex()
         unknown_2 = unknown_2.hex()
@@ -117,9 +119,13 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        monster_id, unknown_2_1, unknown_2_2, unknown_3, unknown_4, monster_type, unknown_6, unknown_7, unknown_8, unknown_9, unknown_10, hp_current, unknown_12, hp_max, unknown_14, unknown_15, unknown_16, unknown_17, unknown_18, unknown_19, unknown_20, unknown_21, unknown_22, unknown_23 = unpack(
-            '<IccIHHIHIQHHHHIHHcccccIc',
-            self._get_data(58))
+        (
+            monster_id, unknown_2_1, unknown_2_2, unknown_3, unknown_4,
+            monster_type, unknown_6, unknown_7, unknown_8, unknown_9,
+            unknown_10, hp_current, unknown_12, hp_max, unknown_14,
+            unknown_15, unknown_16, unknown_17, unknown_18, unknown_19,
+            unknown_20, unknown_21, unknown_22, unknown_23
+        ) = unpack('<IccIHHIHIQHHHHIHHcccccIc', self._get_data(58))
         monster_id = hex(monster_id).zfill(10)
         monster_type = self.npc_monster.get(monster_type) or hex(monster_type).zfill(6)
         unknown_2_1 = unknown_2_1.hex()
@@ -159,8 +165,10 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        attacker_id, target_id, unknown_1, hp_1, unknown_2, hp_2, unknown_3, physical_attack, unknown_5, unknown_6, unknown_7 = unpack(
-            '<IIIhhhhhhhc', self._get_data(27))
+        (
+            attacker_id, target_id, unknown_1, hp_1, unknown_2, hp_2,
+            unknown_3, physical_attack, unknown_5, unknown_6, unknown_7
+        ) = unpack('<IIIhhhhhhhc', self._get_data(27))
         attacker_id = hex(attacker_id).zfill(10)
         target_id = hex(target_id).zfill(10)
         unknown_1 = hex(unknown_1).zfill(10)
@@ -188,9 +196,12 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        target_id, unknown_1_1, unknown_1_2, unknown_2, unknown_3, monster_type, unknown_4, unknown_5, hp_current, unknown_6, hp_max, unknown_7, unknown_8, unknown_9, position_1, position_2, position_3, unknown_10, unknown_11 = unpack(
-            '<IccIHHQQHHHIHHcccIc', self._get_data(52))
-
+        (
+            target_id, unknown_1_1, unknown_1_2, unknown_2, unknown_3,
+            monster_type, unknown_4, unknown_5, hp_current, unknown_6,
+            hp_max, unknown_7, unknown_8, unknown_9, position_1, position_2,
+            position_3, unknown_10, unknown_11
+        ) = unpack('<IccIHHQQHHHIHHcccIc', self._get_data(52))
         target_id = hex(target_id).zfill(10)
         monster_type = self.npc_monster.get(monster_type) or hex(monster_type).zfill(6)
         hp_current = str(hp_current).rjust(4, ' ')
