@@ -1,82 +1,63 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-Sniff the Mana Plus game.
-https://archlinux.org/packages/community/x86_64/manaplus/
+Manage the node connection of Mana Plus.
 """
 from struct import unpack
 
-from scapy.compat import raw
-from scapy.layers.inet import IP
-from scapy.layers.l2 import Ether
-from scapy.packet import Raw
+from core.game.utility import Utility
 
 
-class ManaPlus:
+class ManaPlusNode(Utility):
     """
-    Sniff the Mana Plus game.
+    Manage the node connection.
     """
 
-    def __init__(self, host: str, packet: Ether):
+    def __init__(self, raw_data: bytes):
         """
         Initialize the class.
 
-        :type host: str
-        :param host: IP of the host means source or destination.
-
-        :type packet: Ether
-        :param packet: Ethernet packet.
+        :type raw_data: bytes
+        :param raw_data: The raw data in bytes.
 
         :rtype: None
         :return: Nothing.
         """
-        self.host = host
-        self.packet = packet
-        self.display_info = True
+        self.display_info = False
+        self.raw_data = raw_data
+        self.raw_data_copy = raw_data
 
-        ip_layer = packet.getlayer(IP)
-        raw_layer = packet.getlayer(Raw)
-        self.raw_data = raw(raw_layer)
-        self.raw_data_copy = raw(raw_layer)
-
-        self.host_actions = {
-            0x80: self._host_npc_monster_check,
+        self.actions = {
+            0x7d: self._scenario_change,
+            0x85: self._player_move_to,
+            0x89: self._player_action,
+            0x90: self._npc_dialog_open,
+            0x94: self._character_visible,
+            0x9b: self._unknown_1_npc_monster_or_dropped_items,
+            0x9f: self._player_pickup_item,
+            0xb8: self._npc_dialog_option_display,
+            0xb9: self._npc_dialog_next,
+            0xbf: self._connect_server_constant_1,
+            0xc5: self._shop_store,
+            0xc8: self._shop_buy_item,
+            0xc9: self._shop_shell_item,
+            0x118: self._npc_killed,
+            0x146: self._npc_dialog_close,
+            0x210: self._connect_server_constant_2,
         }
 
-        self.node_actions = {
-            0x7d: self._node_scenario_change,
-            0x85: self._node_player_move_to,
-            0x89: self._node_player_action,
-            0x90: self._node_npc_dialog_open,
-            0x94: self._node_character_visible,
-            0x9b: self._node_unknown_1_npc_monster_or_dropped_items,
-            0x9f: self._node_player_pickup_item,
-            0xb8: self._node_npc_dialog_option_display,
-            0xb9: self._node_npc_dialog_next,
-            0xbf: self._node_connect_server_constant_1,
-            0xc5: self._node_shop_store,
-            0xc8: self._node_shop_buy_item,
-            0xc9: self._node_shop_shell_item,
-            0x118: self._node_npc_killed,
-            0x146: self._node_npc_dialog_close,
-            0x210: self._node_connect_server_constant_2,
-        }
-
-        self.node_player_actions = {
+        self.player_actions = {
             0x2: 'Sit down',
             0x3: 'Stan up',
-            0x7: 'Attack NPC',
+            0x7: 'Attack',
         }
 
-        source = ip_layer.src
-        if host == source:
-            self._from_host()
-        else:
-            self._from_node()
+        super().__init__(self.display_info, self.raw_data_copy)
+        self._start()
 
-    def _from_host(self) -> None:
+    def _start(self) -> None:
         """
-        The package is coming from the host.
+        Start the parse of the packages.
 
         :rtype: None
         :return: Nothing.
@@ -85,38 +66,11 @@ class ManaPlus:
             return
 
         id_package, = unpack('<h', self._get_data(2))
-        if id_package in self.host_actions.keys():
-            message = self.host_actions.get(id_package)()
+        if id_package in self.actions.keys():
+            message = self.actions.get(id_package)()
             self._display_message(message)
         else:
-            self.display_info = False
-            if self.display_info:
-                id_hex = hex(id_package)
-                print('HOST'
-                      f' | ID {id_hex}'
-                      f' | {self.raw_data.hex()}'
-                      )
-            return
-
-        if len(self.raw_data_copy) > 0:
-            self._from_host()
-
-    def _from_node(self) -> None:
-        """
-        The package is coming from the node.
-
-        :rtype: None
-        :return: Nothing.
-        """
-        if len(self.raw_data_copy) == 0:
-            return
-
-        id_package, = unpack('<h', self._get_data(2))
-        if id_package in self.node_actions.keys():
-            message = self.node_actions.get(id_package)()
-            self._display_message(message)
-        else:
-            self.display_info = True
+            # self.display_info = True
             if self.display_info:
                 id_hex = hex(id_package)
                 print('NODE'
@@ -126,38 +80,9 @@ class ManaPlus:
             return
 
         if len(self.raw_data_copy) > 0:
-            self._from_node()
+            self._start()
 
-    def _get_data(self, size: int) -> bytes:
-        """
-        Split the data in two parts.
-        The first one is returned the second is updated in the global data.
-
-        :type size: int
-        :param size: Size of data which will split.
-
-        :rtype: bytes
-        :return: The split data.
-        """
-        data = self.raw_data_copy[:size]
-        self.raw_data_copy = self.raw_data_copy[size:]
-
-        return data
-
-    def _display_message(self, message: str) -> None:
-        """
-        Print message in the console.
-
-        :type message: str
-        :param message: Size of data which will split.
-
-        :rtype: None
-        :return: Nothing.
-        """
-        if self.display_info:
-            print(message)
-
-    def _node_player_move_to(self) -> str:
+    def _player_move_to(self) -> str:
         """
         Player moves to specific position.
 
@@ -167,9 +92,9 @@ class ManaPlus:
         position_1, position_2, position_3 = unpack('<ccc', self._get_data(3))
 
         return '--> Player move to' \
-               f' | {position_1.hex()} {position_2.hex()} {position_3.hex()}'
+               f' | {position_1.hex()}{position_2.hex()}{position_3.hex()}'
 
-    def _node_player_action(self) -> str:
+    def _player_action(self) -> str:
         """
         Player Action.
 
@@ -179,8 +104,8 @@ class ManaPlus:
         id_target = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
         action_id, = unpack('<B', self._get_data(1))
         action_description = (
-            ' = ' + self.node_player_actions.get(action_id)
-            if action_id in self.node_player_actions.keys()
+            ' = ' + self.player_actions.get(action_id)
+            if action_id in self.player_actions.keys()
             else ''
         )
 
@@ -190,7 +115,7 @@ class ManaPlus:
                f' | ID {hex(action_id)}{action_description}'
 
     @staticmethod
-    def _node_npc_killed() -> str:
+    def _npc_killed() -> str:
         """
         The NPC (Non-Player Character) was killed.
 
@@ -199,7 +124,7 @@ class ManaPlus:
         """
         return '--> NPC was killed'
 
-    def _node_player_pickup_item(self) -> str:
+    def _player_pickup_item(self) -> str:
         """
         Player pick up an item.
 
@@ -209,12 +134,12 @@ class ManaPlus:
         action_id, = unpack('<B', self._get_data(1))
         unknown_1, unknown_2, unknown_3 = unpack('<ccc', self._get_data(3))
 
-        self.display_info = True
+        # self.display_info = True
         return '--> Player pick up an item' \
                f' | ID {hex(action_id)}' \
                f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
 
-    def _node_character_visible(self) -> str:
+    def _character_visible(self) -> str:
         """
         The character is visible for me.
 
@@ -226,7 +151,7 @@ class ManaPlus:
         return '--> Character visible' \
                f' | ID {id_target}'
 
-    def _node_unknown_1_npc_monster_or_dropped_items(self) -> str:
+    def _unknown_1_npc_monster_or_dropped_items(self) -> str:
         """
         Something is sending to the server related to the NPC Monsters or dropped items.
 
@@ -235,11 +160,11 @@ class ManaPlus:
         """
         unknown_1, unknown_2, unknown_3 = unpack('<ccc', self._get_data(3))
 
-        self.display_info = True
+        # self.display_info = True
         return '--> Unknown 1 --> Related NPC Monsters or dropped Items' \
                f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
 
-    def _node_npc_dialog_open(self) -> str:
+    def _npc_dialog_open(self) -> str:
         """
         Start to talk with an NPC, the dialog is open.
 
@@ -253,7 +178,7 @@ class ManaPlus:
                f' | ID {id_dialog}' \
                f' | Sub-dialog {sub_dialog.hex()}'
 
-    def _node_npc_dialog_next(self) -> str:
+    def _npc_dialog_next(self) -> str:
         """
         Talking with an NPC, display next dialog.
 
@@ -265,7 +190,7 @@ class ManaPlus:
         return '--> NPC Dialog next' \
                f' | ID {id_dialog}'
 
-    def _node_npc_dialog_option_display(self) -> str:
+    def _npc_dialog_option_display(self) -> str:
         """
         Talking with an NPC, display new dialog based on the selected option.
 
@@ -279,7 +204,7 @@ class ManaPlus:
                f' | ID {id_dialog}' \
                f' | Sub-dialog {sub_dialog.hex()}'
 
-    def _node_npc_dialog_close(self) -> str:
+    def _npc_dialog_close(self) -> str:
         """
         Talking with an NPC, the dialog is close.
 
@@ -291,7 +216,7 @@ class ManaPlus:
         return '--> NPC Dialog close' \
                f' | ID {id_dialog}'
 
-    def _node_shop_store(self) -> str:
+    def _shop_store(self) -> str:
         """
         Open the shop storage.
 
@@ -303,7 +228,7 @@ class ManaPlus:
         return '--> Shop store' \
                f' | ID {id_dialog}'
 
-    def _node_shop_buy_item(self) -> str:
+    def _shop_buy_item(self) -> str:
         """
         Buy an item.
 
@@ -315,13 +240,13 @@ class ManaPlus:
         unknown_2 = unknown_2.hex()
         id_item = hex(id_item).zfill(6)
 
-        self.display_info = True
+        # self.display_info = True
         return '--> Shop buy item' \
                f' | Unknown {unknown_1} {unknown_2}' \
                f' | Quantity {quantity}' \
                f' | ID {id_item}'
 
-    def _node_shop_shell_item(self) -> str:
+    def _shop_shell_item(self) -> str:
         """
         Shell an item.
 
@@ -333,14 +258,14 @@ class ManaPlus:
         unknown_2 = unknown_2.hex()
         id_item = hex(id_item).zfill(6)
 
-        self.display_info = True
+        # self.display_info = True
         return '--> Shop shell item' \
                f' | Unknown {unknown_1} {unknown_2}' \
                f' | ID {id_item}' \
                f' | Quantity {quantity}'
 
     @staticmethod
-    def _node_scenario_change() -> str:
+    def _scenario_change() -> str:
         """
         The scenario was changed.
 
@@ -349,7 +274,7 @@ class ManaPlus:
         """
         return '--> Scenario change'
 
-    def _node_connect_server_constant_1(self) -> str:
+    def _connect_server_constant_1(self) -> str:
         """
         The node is communicate with the server constantly.
 
@@ -363,7 +288,7 @@ class ManaPlus:
                f' | Unknown {unknown_1}'
 
     @staticmethod
-    def _node_connect_server_constant_2() -> str:
+    def _connect_server_constant_2() -> str:
         """
         The node is communicate with the server constantly but not frequently.
 
@@ -371,18 +296,3 @@ class ManaPlus:
         :return: Message of this action.
         """
         return '--> Communicate with the server [0x210]'
-
-    def _host_npc_monster_check(self) -> str:
-        """
-        Check the specific NPC monster.
-
-        :rtype: str
-        :return: Message of this action.
-        """
-        id_npc, unknown_1, = unpack('<Ic', self._get_data(5))
-        id_npc = hex(id_npc).zfill(10)
-        unknown_1 = unknown_1.hex()
-
-        return '<-- NPC Monster Check' \
-               f' | ID {id_npc}' \
-               f' | Unknown {unknown_1}'
