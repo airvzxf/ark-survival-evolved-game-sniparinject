@@ -42,36 +42,10 @@ class ManaPlusHost(Utility):
             0x447: 'White Bell',
         }
 
-        super().__init__(self.display_info, self.raw_data_copy)
+        super().__init__('host', self.display_info, self.raw_data,
+                         self.raw_data_copy, self.actions)
         # print(self.raw_data.hex())
         self._start()
-
-    def _start(self) -> None:
-        """
-        Start the parse of the packages.
-
-        :rtype: None
-        :return: Nothing.
-        """
-        if len(self.raw_data_copy) == 0:
-            return
-
-        id_package, = unpack('<h', self._get_data(2))
-        if id_package in self.actions.keys():
-            message = self.actions.get(id_package)()
-            self._display_message(message)
-        else:
-            self.display_info = True
-            if self.display_info:
-                id_hex = hex(id_package)
-                print('HOST'
-                      f' | ID {id_hex}'
-                      f' | {self.raw_data.hex()}'
-                      )
-            return
-
-        if len(self.raw_data_copy) > 0:
-            self._start()
 
     def _npc_monster_check(self) -> str:
         """
