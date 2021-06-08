@@ -23,7 +23,7 @@ class ManaPlusNode(Utility):
         :rtype: None
         :return: Nothing.
         """
-        self.display_info = False
+        self.display_info = True
         self.raw_data = raw_data
         self.raw_data_copy = raw_data
 
@@ -52,8 +52,9 @@ class ManaPlusNode(Utility):
             0x7: 'Attack',
         }
 
-        super().__init__('node', self.display_info, self.raw_data,
-                         self.raw_data_copy, self.actions)
+        super().__init__(
+            'node', self.display_info, self.raw_data,
+            self.raw_data_copy, self.actions)
         self._start()
 
     def _player_move_to(self) -> str:
@@ -75,18 +76,19 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_target = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
-        action_id, = unpack('<B', self._get_data(1))
+        id_target, action_id = unpack('<IB', self._get_data(5))
+        id_target = hex(id_target).zfill(10)
         action_description = (
             ' = ' + self.player_actions.get(action_id)
             if action_id in self.player_actions.keys()
             else ''
         )
+        action_id = hex(action_id)
 
         self.display_info = True
         return '--> Player action' \
                f' | Target {id_target}' \
-               f' | ID {hex(action_id)}{action_description}'
+               f' | ID {action_id}{action_description}'
 
     @staticmethod
     def _npc_killed() -> str:
@@ -105,13 +107,16 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        action_id, = unpack('<B', self._get_data(1))
-        unknown_1, unknown_2, unknown_3 = unpack('<ccc', self._get_data(3))
+        action_id, unknown_1, unknown_2, unknown_3 = unpack('<Bccc', self._get_data(4))
+        action_id = hex(action_id)
+        unknown_1 = unknown_1.hex()
+        unknown_2 = unknown_2.hex()
+        unknown_3 = unknown_3.hex()
 
         # self.display_info = True
         return '--> Player pick up an item' \
-               f' | ID {hex(action_id)}' \
-               f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
+               f' | ID {action_id}' \
+               f' | Unknown {unknown_1} {unknown_2} {unknown_3}'
 
     def _character_visible(self) -> str:
         """
@@ -120,7 +125,8 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_target = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
+        id_target, = unpack('<I', self._get_data(4))
+        id_target = hex(id_target).zfill(10)
 
         return '--> Character visible' \
                f' | ID {id_target}'
@@ -133,10 +139,13 @@ class ManaPlusNode(Utility):
         :return: Message of this action.
         """
         unknown_1, unknown_2, unknown_3 = unpack('<ccc', self._get_data(3))
+        unknown_1 = unknown_1.hex()
+        unknown_2 = unknown_2.hex()
+        unknown_3 = unknown_3.hex()
 
         # self.display_info = True
-        return '--> Unknown 1 --> Related NPC Monsters or dropped Items' \
-               f' | Unknown {unknown_1.hex()} {unknown_2.hex()} {unknown_3.hex()}'
+        return '--> Unknown 3 --> Related NPC Monsters or dropped Items' \
+               f' | Unknown {unknown_1} {unknown_2} {unknown_3}'
 
     def _npc_dialog_open(self) -> str:
         """
@@ -145,12 +154,13 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
-        sub_dialog, = unpack('<c', self._get_data(1))
+        id_dialog, sub_dialog = unpack('<Ic', self._get_data(5))
+        id_dialog = hex(id_dialog).zfill(10)
+        sub_dialog, = sub_dialog.hex()
 
         return '--> NPC Dialog open' \
                f' | ID {id_dialog}' \
-               f' | Sub-dialog {sub_dialog.hex()}'
+               f' | Sub-dialog {sub_dialog}'
 
     def _npc_dialog_next(self) -> str:
         """
@@ -159,7 +169,8 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
+        id_dialog, = unpack('<I', self._get_data(4))
+        id_dialog = hex(id_dialog).zfill(10)
 
         return '--> NPC Dialog next' \
                f' | ID {id_dialog}'
@@ -171,12 +182,13 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
-        sub_dialog, = unpack('<c', self._get_data(1))
+        id_dialog, sub_dialog = unpack('<Ic', self._get_data(5))
+        id_dialog = hex(id_dialog).zfill(10)
+        sub_dialog, = sub_dialog.hex()
 
         return '--> NPC Dialog conversation' \
                f' | ID {id_dialog}' \
-               f' | Sub-dialog {sub_dialog.hex()}'
+               f' | Sub-dialog {sub_dialog}'
 
     def _npc_dialog_close(self) -> str:
         """
@@ -185,7 +197,8 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
+        id_dialog, = unpack('<I', self._get_data(4))
+        id_dialog = hex(id_dialog).zfill(10)
 
         return '--> NPC Dialog close' \
                f' | ID {id_dialog}'
@@ -197,7 +210,8 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_dialog = hex(unpack('<I', self._get_data(4))[0]).zfill(10)
+        id_dialog, = unpack('<I', self._get_data(4))
+        id_dialog = hex(id_dialog).zfill(10)
 
         return '--> Shop store' \
                f' | ID {id_dialog}'
@@ -210,9 +224,9 @@ class ManaPlusNode(Utility):
         :return: Message of this action.
         """
         unknown_1, unknown_2, quantity, id_item, = unpack('<ccHH', self._get_data(6))
+        id_item = hex(id_item).zfill(6)
         unknown_1 = unknown_1.hex()
         unknown_2 = unknown_2.hex()
-        id_item = hex(id_item).zfill(6)
 
         # self.display_info = True
         return '--> Shop buy item' \
@@ -228,9 +242,9 @@ class ManaPlusNode(Utility):
         :return: Message of this action.
         """
         unknown_1, unknown_2, id_item, quantity, = unpack('<ccHH', self._get_data(6))
+        id_item = hex(id_item).zfill(6)
         unknown_1 = unknown_1.hex()
         unknown_2 = unknown_2.hex()
-        id_item = hex(id_item).zfill(6)
 
         # self.display_info = True
         return '--> Shop shell item' \

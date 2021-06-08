@@ -23,9 +23,10 @@ class ManaPlusHost(Utility):
         :rtype: None
         :return: Nothing.
         """
-        self.display_info = False
+        self.display_info = True
         self.raw_data = raw_data
         self.raw_data_copy = raw_data
+        # print(self.raw_data.hex())
 
         self.actions = {
             0x78: self._npc_info,
@@ -42,9 +43,9 @@ class ManaPlusHost(Utility):
             0x447: 'White Bell',
         }
 
-        super().__init__('host', self.display_info, self.raw_data,
-                         self.raw_data_copy, self.actions)
-        # print(self.raw_data.hex())
+        super().__init__(
+            'host', self.display_info, self.raw_data,
+            self.raw_data_copy, self.actions)
         self._start()
 
     def _npc_monster_check(self) -> str:
@@ -54,7 +55,7 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_npc, unknown_1, = unpack('<Ic', self._get_data(5))
+        id_npc, unknown_1 = unpack('<Ic', self._get_data(5))
         id_npc = hex(id_npc).zfill(10)
         unknown_1 = unknown_1.hex()
 
@@ -105,7 +106,6 @@ class ManaPlusHost(Utility):
         unknown_2_1 = unknown_2_1.hex()
         unknown_2_2 = unknown_2_2.hex()
         unknown_8 = hex(unknown_8).zfill(10)
-        # unknown_16 = hex(unknown_16).zfill(6)
         unknown_17 = unknown_17.hex()
         unknown_18 = unknown_18.hex()
         unknown_19 = unknown_19.hex()
@@ -113,7 +113,7 @@ class ManaPlusHost(Utility):
         unknown_21 = unknown_21.hex()
         unknown_23 = unknown_23.hex()
 
-        self.display_info = True
+        # self.display_info = True
         return '<-- NPC Move' \
                f' | ID {monster_id}' \
                f' | {unknown_2_1} {unknown_2_2}' \
@@ -149,7 +149,7 @@ class ManaPlusHost(Utility):
         physical_attack = str(physical_attack).rjust(4, ' ')
         unknown_7 = unknown_7.hex()
 
-        self.display_info = True
+        # self.display_info = True
         return '<-- Fight' \
                f' | Attacker {attacker_id}' \
                f' | Target {target_id}' \
@@ -187,7 +187,7 @@ class ManaPlusHost(Utility):
         unknown_1_1 = unknown_1_1.hex()
         unknown_1_2 = unknown_1_2.hex()
 
-        self.display_info = True
+        # self.display_info = True
         return '<-- NPC Info' \
                f' | ID {target_id}' \
                f' | {unknown_1_1} {unknown_1_2}' \
