@@ -154,10 +154,10 @@ class Utility:
             format_code += '00;30;'
 
         if style == TextStyle.BOLD:
-            format_code += '01;30;'
+            format_code += '00;37;'
 
         if style == TextStyle.LIGHT:
-            format_code += '02;30;'
+            format_code += '00;96;'
 
         format_code += '44' if self.request == 'host' else '100'
 
