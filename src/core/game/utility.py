@@ -56,7 +56,7 @@ class Utility:
             message = self.actions.get(id_package)()
             self._display_message(message)
         else:
-            self.display_info = True
+            # self.display_info = True
             if self.display_info:
                 id_hex = hex(id_package)
                 print(f'{self.request.upper()}'

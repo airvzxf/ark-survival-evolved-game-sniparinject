@@ -119,6 +119,7 @@ class ManaPlusNode(Utility):
         :rtype: str
         :return: Message of this action.
         """
+        # noinspection SpellCheckingInspection
         action_id, unknown_1, unknown_2, unknown_3 = unpack('<Bccc', self._get_data(4))
         action_id = hex(action_id)
         unknown_1 = unknown_1.hex()

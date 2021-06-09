@@ -55,7 +55,8 @@ class SnifferNetwork:
             iface=self.interface,
             filter=f'host {self.host} and tcp port {self.port}',
             count=0,
-            prn=self._sniff_data)
+            prn=self._sniff_data
+        )
 
     def _sniff_data(self, packet: Ether) -> None:
         """

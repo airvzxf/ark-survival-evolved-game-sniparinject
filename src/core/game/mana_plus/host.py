@@ -37,6 +37,7 @@ class ManaPlusHost(Utility):
             0x8a: self._fight,
         }
 
+        # noinspection SpellCheckingInspection
         self.npc_monster = {
             0x459: 'Pollett',
             0x3fc: 'Fluffy',
@@ -77,6 +78,7 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
+        # noinspection SpellCheckingInspection
         (
             id_move, unknown_1, unknown_2, unknown_3,
             unknown_4, unknown_5, unknown_6
@@ -109,6 +111,7 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
+        # noinspection SpellCheckingInspection
         (
             monster_id, unknown_2_1, unknown_2_2, unknown_3, unknown_4,
             monster_type, unknown_6, unknown_7, unknown_8, unknown_9,
@@ -170,6 +173,7 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
+        # noinspection SpellCheckingInspection
         (
             attacker_id, target_id, unknown_1, hp_1, unknown_2, hp_2,
             unknown_3, physical_attack, unknown_5, unknown_6, unknown_7
@@ -217,6 +221,7 @@ class ManaPlusHost(Utility):
         :rtype: str
         :return: Message of this action.
         """
+        # noinspection SpellCheckingInspection
         (
             target_id, unknown_1_1, unknown_1_2, unknown_2, unknown_3,
             monster_type, unknown_4, unknown_5, hp_current, unknown_6,
