@@ -5,7 +5,7 @@ ARK Game: Read the network packages is an effort to use WireShark and scan the p
 your current position and get more information in the play game.
 """
 from core.settings import Settings
-from core.sniffer_network import SnifferNetwork
+from core.sniff_network import SniffNetwork
 
 if __name__ == '__main__':
     print()
@@ -18,4 +18,4 @@ if __name__ == '__main__':
     interface = settings.get('Network').get('interface')
     host = settings.get('Server').get('host')
     port = settings.get('Server').get('port')
-    SnifferNetwork(interface, host, port).start()
+    SniffNetwork(interface, host, port).start()

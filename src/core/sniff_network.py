@@ -14,7 +14,7 @@ from game.mana_plus import game
 
 
 # pylint: disable=too-few-public-methods
-class SnifferNetwork:
+class SniffNetwork:
     """
     Init sniff of the network for spy the packages.
     """
@@ -50,6 +50,7 @@ class SnifferNetwork:
         print(f'Interface: {self.interface}')
         print(f'Host:      {self.host}')
         print(f'Port:      {self.port}')
+        print()
 
         sniff(
             iface=self.interface,
