@@ -13,7 +13,9 @@ class Utility:
     Sniff the Mana Plus game.
     """
 
-    def __init__(self, request: str, display_info: bool, raw_data: bytes, raw_data_copy: bytes, actions: dict):
+    # pylint: disable=too-many-arguments
+    def __init__(self, request: str, display_info: bool,
+                 raw_data: bytes, raw_data_copy: bytes, actions: dict):
         """
         Initialize the class.
 
@@ -111,14 +113,14 @@ class Utility:
         for style in style_range:
             print()
             print(f'Style: {str(style).zfill(2)}')
-            for fg in fg_color_rage:
-                s1 = ''
-                for bg in bg_color_rage:
+            for foreground in fg_color_rage:
+                output = ''
+                for background in bg_color_rage:
                     text_format = ';'.join([
-                        str(style).zfill(2), str(fg).zfill(2), str(bg).zfill(2)
+                        str(style).zfill(2), str(foreground).zfill(2), str(background).zfill(2)
                     ])
-                    s1 += f'\x1b[{text_format}m {text_format} \x1b[0m'
-                print(s1)
+                    output += f'\x1b[{text_format}m {text_format} \x1b[0m'
+                print(output)
 
     def text_format(self, text: str, style: TextStyle = TextStyle.NORMAL) -> str:
         """
