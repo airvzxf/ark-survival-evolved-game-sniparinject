@@ -191,7 +191,7 @@ class TestUtility:
     def test_text_format_bold(self):
         # Arrange
         text = 'Je je je'
-        expected_format = f'\x1b[01;30;100m{text}\x1b[0m'
+        expected_format = f'\x1b[00;37;100m{text}\x1b[0m'
 
         # Act
         utility = Utility('', False, b'', b'', {})
@@ -203,7 +203,7 @@ class TestUtility:
     def test_text_format_light(self):
         # Arrange
         text = 'My life'
-        expected_format = f'\x1b[02;30;100m{text}\x1b[0m'
+        expected_format = f'\x1b[00;96;100m{text}\x1b[0m'
 
         # Act
         utility = Utility('', False, b'', b'', {})
