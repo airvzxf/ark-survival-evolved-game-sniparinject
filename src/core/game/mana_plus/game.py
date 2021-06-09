@@ -13,11 +13,11 @@ from scapy.packet import Raw
 
 from core.game.mana_plus import host
 from core.game.mana_plus import node
-from core.game.mana_plus.host import ManaPlusHost
-from core.game.mana_plus.node import ManaPlusNode
+from core.game.mana_plus.host import Host
+from core.game.mana_plus.node import Node
 
 
-class ManaPlus:
+class Game:
     """
     Sniff the Mana Plus game.
     """
@@ -54,7 +54,7 @@ class ManaPlus:
         """
         try:
             reload(host)
-            ManaPlusHost(self.raw_data)
+            Host(self.raw_data)
         except Exception as error:
             print(f'Error: {error}')
 
@@ -67,6 +67,6 @@ class ManaPlus:
         """
         try:
             reload(node)
-            ManaPlusNode(self.raw_data)
+            Node(self.raw_data)
         except Exception as error:
             print(f'Error: {error}')

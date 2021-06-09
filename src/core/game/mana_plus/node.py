@@ -9,7 +9,7 @@ from core.game.text_style import TextStyle
 from core.game.utility import Utility
 
 
-class ManaPlusNode(Utility):
+class Node(Utility):
     """
     Manage the node connection.
     """

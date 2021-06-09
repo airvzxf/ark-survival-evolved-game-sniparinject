@@ -9,7 +9,7 @@ from core.game.text_style import TextStyle
 from core.game.utility import Utility
 
 
-class ManaPlusHost(Utility):
+class Host(Utility):
     """
     Manage the host connection.
     """
@@ -27,7 +27,6 @@ class ManaPlusHost(Utility):
         self.display_info = True
         self.raw_data = raw_data
         self.raw_data_copy = raw_data
-        # print(self.raw_data.hex())
 
         self.actions = {
             0x78: self._npc_info,

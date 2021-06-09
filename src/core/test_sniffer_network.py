@@ -66,28 +66,28 @@ class TestSnifferNetwork:
         # Assert
         mock_reload.assert_not_called()
 
-    @patch('core.sniffer_network.mana_plus')
+    @patch('core.sniffer_network.game')
     @patch('core.sniffer_network.reload')
-    def test__sniff_data_reload_mana_plus(self, mock_reload: MagicMock, mock_mana_plus: MagicMock):
+    def test__sniff_data_reload_game(self, mock_reload: MagicMock, mock_game: MagicMock):
         # Arrange
         mock_reload.reset_mock()
-        mock_mana_plus.reset_mock()
-        mock_mana_plus.return_value = True
+        mock_game.reset_mock()
+        mock_game.return_value = True
 
         # Act
         sniffer_network = SnifferNetwork('', '', '')
         sniffer_network._sniff_data(TCP() / Raw(b'\xff'))
 
         # Assert
-        mock_reload.assert_called_once_with(mock_mana_plus)
+        mock_reload.assert_called_once_with(mock_game)
 
-    @patch('core.sniffer_network.mana_plus')
+    @patch('core.sniffer_network.game')
     @patch('core.sniffer_network.reload')
-    def test__sniff_data_class_mana_plus(self, mock_reload: MagicMock, mock_mana_plus: MagicMock):
+    def test__sniff_data_class_game(self, mock_reload: MagicMock, mock_game: MagicMock):
         # Arrange
         expected_host = 'goliath.com'
         expected_packet: Ether = TCP() / Raw(b'\x00\x01\x02')
-        mock_mana_plus.reset_mock()
+        mock_game.reset_mock()
         mock_reload.reset_mock()
         mock_reload.return_value = True
 
@@ -96,7 +96,7 @@ class TestSnifferNetwork:
         sniffer_network._sniff_data(expected_packet)
 
         # Assert
-        mock_mana_plus.ManaPlus.assert_called_once_with(expected_host, expected_packet)
+        mock_game.Game.assert_called_once_with(expected_host, expected_packet)
 
     @patch('builtins.print')
     @patch('core.sniffer_network.reload')

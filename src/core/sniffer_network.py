@@ -10,7 +10,7 @@ from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 from scapy.sendrecv import sniff
 
-from core.game.mana_plus import mana_plus
+from core.game.mana_plus import game
 
 
 # pylint: disable=too-few-public-methods
@@ -71,7 +71,7 @@ class SnifferNetwork:
         if packet.haslayer(TCP) and packet.haslayer(Raw):
             # pylint: disable=broad-except
             try:
-                reload(mana_plus)
-                mana_plus.ManaPlus(self.host, packet)
+                reload(game)
+                game.Game(self.host, packet)
             except Exception as error:
                 print(f'Error: {error}')
