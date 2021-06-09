@@ -11,10 +11,9 @@ from scapy.layers.inet import IP
 from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 
-from core.game.mana_plus import host
-from core.game.mana_plus import node
-from core.game.mana_plus.host import Host
-from core.game.mana_plus.node import Node
+from game.mana_plus import node, host
+from game.mana_plus.host import Host
+from game.mana_plus.node import Node
 
 
 class Game:

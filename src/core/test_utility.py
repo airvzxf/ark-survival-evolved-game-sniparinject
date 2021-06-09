@@ -6,8 +6,8 @@ Unit Test.
 from typing import Callable
 from unittest.mock import patch, MagicMock, call
 
-from core.game.text_style import TextStyle
-from core.game.utility import Utility
+from core.text_style import TextStyle
+from core.utility import Utility
 
 
 class TestUtility:
@@ -32,7 +32,7 @@ class TestUtility:
         assert utility.raw_data_copy == expected_raw_data_copy
         assert utility.actions == expected_actions
 
-    @patch('core.game.utility.unpack')
+    @patch('core.utility.unpack')
     def test__start(self, mock_unpack: MagicMock):
         # Arrange
         # Act
@@ -42,7 +42,7 @@ class TestUtility:
         # Assert
         mock_unpack.assert_not_called()
 
-    @patch('core.game.utility.Utility._display_message')
+    @patch('core.utility.Utility._display_message')
     def test__start_execute_action(self, mock_display: MagicMock):
         # Arrange
         id_action = 2565  # \x05\x0a
@@ -60,7 +60,7 @@ class TestUtility:
         # Assert
         mock_display.assert_called_once_with(message)
 
-    @patch('core.game.utility.Utility._display_message')
+    @patch('core.utility.Utility._display_message')
     def test__start_execute_action_recursive(self, mock_display: MagicMock):
         # Arrange
         id_action = 2565  # \x05\x0a

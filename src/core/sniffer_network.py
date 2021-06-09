@@ -10,7 +10,7 @@ from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 from scapy.sendrecv import sniff
 
-from core.game.mana_plus import game
+from game.mana_plus import game
 
 
 # pylint: disable=too-few-public-methods

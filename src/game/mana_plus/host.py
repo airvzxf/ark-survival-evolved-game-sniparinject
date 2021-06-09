@@ -5,8 +5,8 @@ Manage the host connection of Mana Plus.
 """
 from struct import unpack
 
-from core.game.text_style import TextStyle
-from core.game.utility import Utility
+from core.text_style import TextStyle
+from core.utility import Utility
 
 
 class Host(Utility):

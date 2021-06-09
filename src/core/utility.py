@@ -5,7 +5,7 @@ Utilities to handle the parse connection.
 """
 from struct import unpack
 
-from core.game.text_style import TextStyle
+from core.text_style import TextStyle
 
 
 class Utility:
