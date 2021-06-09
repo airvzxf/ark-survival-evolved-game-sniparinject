@@ -70,8 +70,6 @@ class TestSnifferNetwork:
     @patch('core.sniffer_network.reload')
     def test__sniff_data_reload_game(self, mock_reload: MagicMock, mock_game: MagicMock):
         # Arrange
-        mock_reload.reset_mock()
-        mock_game.reset_mock()
         mock_game.return_value = True
 
         # Act
@@ -87,8 +85,6 @@ class TestSnifferNetwork:
         # Arrange
         expected_host = 'goliath.com'
         expected_packet: Ether = TCP() / Raw(b'\x00\x01\x02')
-        mock_game.reset_mock()
-        mock_reload.reset_mock()
         mock_reload.return_value = True
 
         # Act
@@ -104,8 +100,6 @@ class TestSnifferNetwork:
         # Arrange
         expected_error = 'Boom!'
         packet: Ether = TCP() / Raw(b'\x00\x01\x02')
-        mock_print.reset_mock()
-        mock_reload.reset_mock()
         mock_reload.side_effect = Exception(expected_error)
 
         # Act
