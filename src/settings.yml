@@ -4,3 +4,25 @@ Network:
 Server:
   host: 52.174.196.146
   port: 5122
+
+Game:
+  node:
+    display_info: Yes
+    actions:
+      player_action:
+        packet_id: 0x89
+        display_message: No
+        struct:
+          - target:
+              type: unsigned int
+              name: Target
+          - action_id:
+              type: unsigned char
+              name: ID
+        message: '--> Player action | {target} | {action_id} |'
+      player_move_to:
+        packet_id: 0x85
+        struct:
+          - position:
+              type: unsigned int
+        message: '--> Player move to | {position} |'
