@@ -35,7 +35,7 @@ sudo python3 main.py
 ### Example
 
 It is for the game `Mana Plus`, but it is helpful in the middle time that I
-finish the modules for `Ark Evolve`.
+finish the modules for `ARK: Survival Evolved`.
 
 [![asciicast][ascii-mana-image]][ascii-mana-link]
 
