@@ -38,7 +38,11 @@ jobs:
       - name: Analyze the code
         run: |
           cd ./src
-          pylint main.py core/*.py
+          find ./ \
+            -type f \
+            -name "*.py" \
+            -and \( -not -path './venv/*' -and -not -path './script/*' -and -not -path './htmlcov/*' \) \
+            -exec pylint '{}' +
 
   Flake8:
     runs-on: ubuntu-latest
@@ -128,6 +132,6 @@ jobs:
       - name: Code
         run: |
           cd ./src
-          coverage run
+          coverage run 1>/dev/null
           coverage report
           coverage html 1>/dev/null
