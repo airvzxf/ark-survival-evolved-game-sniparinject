@@ -11,6 +11,7 @@ from scapy.layers.inet import IP
 from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 
+from core.utility import Utility
 from game.mana_plus import node, host
 from game.mana_plus.host import Host
 from game.mana_plus.node import Node
@@ -55,7 +56,10 @@ class Game:
             reload(host)
             Host(self.raw_data)
         except Exception as error:
-            print(f'Error: {error}')
+            message_error = Utility.text_error_format(f'Error Host: {error}')
+            message_data = Utility.text_error_format(f'            {self.raw_data.hex()}')
+            print(message_error)
+            print(message_data)
 
     def _start_node(self) -> None:
         """
@@ -68,4 +72,7 @@ class Game:
             reload(node)
             Node(self.raw_data)
         except Exception as error:
-            print(f'Error: {error}')
+            message_error = Utility.text_error_format(f'Error Node: {error}')
+            message_data = Utility.text_error_format(f'            {self.raw_data.hex()}')
+            print(message_error)
+            print(message_data)

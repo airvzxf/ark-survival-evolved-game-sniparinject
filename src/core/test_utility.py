@@ -223,3 +223,15 @@ class TestUtility:
 
         # Assert
         assert formatted_code == expected_format
+
+    def test_text_error_format(self):
+        # Arrange
+        text = 'Is it an error?'
+        expected_format = f'\x1b[00;37;41m{text}\x1b[0m'
+
+        # Act
+        utility = Utility('', False, b'', b'', {})
+        formatted_code = utility.text_error_format(text)
+
+        # Assert
+        assert formatted_code == expected_format

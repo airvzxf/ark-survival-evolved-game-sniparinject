@@ -14,3 +14,4 @@ class TextStyle(Enum):
     NORMAL = 2
     BOLD = 3
     LIGHT = 4
+    ERROR = 5

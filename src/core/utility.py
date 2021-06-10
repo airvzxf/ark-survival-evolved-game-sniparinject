@@ -162,3 +162,28 @@ class Utility:
         format_code += '44' if self.request == 'host' else '100'
 
         return f'\x1b[{format_code}m{text}\x1b[0m'
+
+    @staticmethod
+    def text_error_format(text: str) -> str:
+        """
+        Prints the text format for host output.
+
+        Style:
+        - NORMAL = '0'
+        - BOLD = '1'
+        - LIGHT = '2'
+        - ITALIC = '3'
+        - UNDERLINE = '4'
+        - SELECTED = '7'
+        - STRIKETHROUGH = '9'
+        - DOUBLE_UNDERLINE = '21'
+
+        :type text: str
+        :param text: The text which will be format.
+
+        :rtype: str
+        :return: The format code.
+        """
+        error_code = '00;37;41'
+
+        return f'\x1b[{error_code}m{text}\x1b[0m'

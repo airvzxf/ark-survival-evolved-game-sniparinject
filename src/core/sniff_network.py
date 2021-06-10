@@ -10,6 +10,7 @@ from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 from scapy.sendrecv import sniff
 
+from core.utility import Utility
 from game.mana_plus import game
 
 
@@ -75,4 +76,5 @@ class SniffNetwork:
                 reload(game)
                 game.Game(self.host, packet)
             except Exception as error:
-                print(f'Error: {error}')
+                message = Utility.text_error_format(f'Error Sniff Network: {error}')
+                print(message)

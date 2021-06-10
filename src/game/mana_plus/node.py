@@ -53,6 +53,11 @@ class Node(Utility):
             0x7: 'Attack',
         }
 
+        self.shop_options = {
+            0x0: 'Buy',
+            0x1: 'Sell',
+        }
+
         super().__init__(
             'node', self.display_info, self.raw_data,
             self.raw_data_copy, self.actions)
@@ -85,12 +90,7 @@ class Node(Utility):
         """
         id_target, action_id = unpack('<IB', self._get_data(5))
         id_target = hex(id_target).zfill(10)
-        action_description = (
-            ' = ' + self.player_actions.get(action_id)
-            if action_id in self.player_actions.keys()
-            else ''
-        )
-        action_id = hex(action_id)
+        action_id = self.player_actions.get(action_id) or hex(action_id)
 
         message = self.text_format('--> Player action', TextStyle.TITLE)
         message += self.text_format(' |')
@@ -98,7 +98,7 @@ class Node(Utility):
         message += self.text_format(f' {id_target}', TextStyle.LIGHT)
         message += self.text_format(' |')
         message += self.text_format(' ID', TextStyle.BOLD)
-        message += self.text_format(f' {action_id}{action_description}', TextStyle.LIGHT)
+        message += self.text_format(f' {action_id}', TextStyle.LIGHT)
 
         self.display_info = True
         return message
@@ -183,7 +183,7 @@ class Node(Utility):
         """
         id_dialog, sub_dialog = unpack('<Ic', self._get_data(5))
         id_dialog = hex(id_dialog).zfill(10)
-        sub_dialog, = sub_dialog.hex()
+        sub_dialog = sub_dialog.hex()
 
         message = self.text_format('--> NPC Dialog open', TextStyle.TITLE)
         message += self.text_format(' |')
@@ -221,7 +221,7 @@ class Node(Utility):
         """
         id_dialog, sub_dialog = unpack('<Ic', self._get_data(5))
         id_dialog = hex(id_dialog).zfill(10)
-        sub_dialog, = sub_dialog.hex()
+        sub_dialog = sub_dialog.hex()
 
         message = self.text_format('--> NPC Dialog conversation', TextStyle.TITLE)
         message += self.text_format(' |')
@@ -257,13 +257,17 @@ class Node(Utility):
         :rtype: str
         :return: Message of this action.
         """
-        id_dialog, = unpack('<I', self._get_data(4))
+        id_dialog, id_option = unpack('<IB', self._get_data(5))
         id_dialog = hex(id_dialog).zfill(10)
+        id_option = self.shop_options.get(id_option) or hex(id_option)
 
         message = self.text_format('--> Shop store', TextStyle.TITLE)
         message += self.text_format(' |')
-        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(' Target', TextStyle.BOLD)
         message += self.text_format(f' {id_dialog}', TextStyle.LIGHT)
+        message += self.text_format(' |')
+        message += self.text_format(' ID', TextStyle.BOLD)
+        message += self.text_format(f' {id_option}', TextStyle.LIGHT)
 
         return message
 

@@ -13,6 +13,9 @@ from core.sniff_network import SniffNetwork
 
 
 class TestSniffNetwork:
+    style_error = '\x1b[00;37;41m'
+    style_end = '\x1b[0m'
+
     def test___init__(self):
         # Arrange
         expected_interface = 'Iceberg'
@@ -107,4 +110,6 @@ class TestSniffNetwork:
         sniff_network._sniff_data(packet)
 
         # Assert
-        mock_print.assert_called_once_with(f'Error: {expected_error}')
+        mock_print.assert_called_once_with(
+            f'{self.style_error}Error Sniff Network: {expected_error}{self.style_end}'
+        )

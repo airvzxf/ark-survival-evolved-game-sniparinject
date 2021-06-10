@@ -113,13 +113,13 @@ class Host(Utility):
         # noinspection SpellCheckingInspection
         (
             monster_id, unknown_2_1, unknown_2_2, unknown_3, unknown_4,
-            monster_type, unknown_6, unknown_7, unknown_8, unknown_9,
+            npc_type, unknown_6, unknown_7, unknown_8, unknown_9,
             unknown_10, hp_current, unknown_12, hp_max, unknown_14,
             unknown_15, unknown_16, unknown_17, unknown_18, unknown_19,
             unknown_20, unknown_21, unknown_22, unknown_23
         ) = unpack('<IccIHHIHIQHHHHIHHcccccIc', self._get_data(58))
         monster_id = hex(monster_id).zfill(10)
-        monster_type = self.npc_monster.get(monster_type) or hex(monster_type).zfill(6)
+        npc_type = self.npc_monster.get(npc_type) or hex(npc_type).zfill(6)
         unknown_2_1 = unknown_2_1.hex()
         unknown_2_2 = unknown_2_2.hex()
         unknown_8 = hex(unknown_8).zfill(10)
@@ -139,7 +139,8 @@ class Host(Utility):
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_3} {unknown_4}', TextStyle.LIGHT)
         message += self.text_format(' |')
-        message += self.text_format(f' {monster_type}', TextStyle.BOLD)
+        message += self.text_format(' NPC', TextStyle.BOLD)
+        message += self.text_format(f' {npc_type}', TextStyle.LIGHT)
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_6} {unknown_7}', TextStyle.LIGHT)
         message += self.text_format(f' {unknown_8} {unknown_9}', TextStyle.LIGHT)
@@ -223,12 +224,12 @@ class Host(Utility):
         # noinspection SpellCheckingInspection
         (
             target_id, unknown_1_1, unknown_1_2, unknown_2, unknown_3,
-            monster_type, unknown_4, unknown_5, hp_current, unknown_6,
+            npc_type, unknown_4, unknown_5, hp_current, unknown_6,
             hp_max, unknown_7, unknown_8, unknown_9, position_1, position_2,
             position_3, unknown_10, unknown_11
         ) = unpack('<IccIHHQQHHHIHHcccIc', self._get_data(52))
         target_id = hex(target_id).zfill(10)
-        monster_type = self.npc_monster.get(monster_type) or hex(monster_type).zfill(6)
+        npc_type = self.npc_monster.get(npc_type) or hex(npc_type).zfill(6)
         hp_current = str(hp_current).rjust(4, ' ')
         hp_max = str(hp_max).rjust(4, ' ')
         position_1 = position_1.hex()
@@ -247,7 +248,8 @@ class Host(Utility):
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_2} {unknown_3}', TextStyle.LIGHT)
         message += self.text_format(' |')
-        message += self.text_format(f' {monster_type}', TextStyle.BOLD)
+        message += self.text_format(' NPC', TextStyle.BOLD)
+        message += self.text_format(f' {npc_type}', TextStyle.LIGHT)
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_4}', TextStyle.LIGHT)
         message += self.text_format(' |')
