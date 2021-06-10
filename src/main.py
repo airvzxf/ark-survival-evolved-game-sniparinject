@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-ARK Game: Read the network packages is an effort to use WireShark and scan the package to know
+ARK Game: Read the network packets is an effort to use WireShark and scan the packet to know
 your current position and get more information in the play game.
 """
 from core.network_sniffer import NetworkSniffer

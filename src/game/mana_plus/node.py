@@ -134,7 +134,6 @@ class Node(Utility):
         message += self.text_format(' Unknown', TextStyle.BOLD)
         message += self.text_format(f' {unknown_1} {unknown_2} {unknown_3}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message
 
     def _character_visible(self) -> str:
@@ -171,7 +170,6 @@ class Node(Utility):
         message += self.text_format(' Unknown', TextStyle.BOLD)
         message += self.text_format(f' {unknown_1} {unknown_2} {unknown_3}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message
 
     def _npc_dialog_open(self) -> str:
@@ -294,7 +292,6 @@ class Node(Utility):
         message += self.text_format(' ID', TextStyle.BOLD)
         message += self.text_format(f' {id_item}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message
 
     def _shop_shell_item(self) -> str:
@@ -320,7 +317,6 @@ class Node(Utility):
         message += self.text_format(' Quantity', TextStyle.BOLD)
         message += self.text_format(f' {quantity}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message
 
     def _scenario_change(self) -> str:

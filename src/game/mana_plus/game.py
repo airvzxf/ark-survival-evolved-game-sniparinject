@@ -47,7 +47,7 @@ class Game:
 
     def _start_host(self) -> None:
         """
-        Start to process the host packages.
+        Start to process the host packets.
 
         :rtype: None
         :return: Nothing.
@@ -63,7 +63,7 @@ class Game:
 
     def _start_node(self) -> None:
         """
-        Start to process the node packages.
+        Start to process the node packets.
 
         :rtype: None
         :return: Nothing.

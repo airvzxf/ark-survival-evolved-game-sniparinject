@@ -1,6 +1,6 @@
-# ARK Game
+# ARK: Survival Evolved Game
 
-Intercept and read the network packages to find information about the game, but
+Intercept and read the network packets to find information about the game, but
 it could be useful for any network sniffer. This project is work in progress.
 Reefer to the [To-Do's][todo] list to check what is done and what is coming.
 

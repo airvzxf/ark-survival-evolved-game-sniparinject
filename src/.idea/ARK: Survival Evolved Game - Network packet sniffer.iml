@@ -8,7 +8,7 @@
       <excludePattern pattern=".coverage" />
       <excludePattern pattern="delete-me.txt" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="ARK: Survival Evolved - Python 3.9" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">

@@ -163,7 +163,6 @@ class Host(Utility):
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_22} {unknown_23}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message
 
     def _fight(self) -> str:
@@ -211,7 +210,6 @@ class Host(Utility):
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_7}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message
 
     def _npc_info(self) -> str:
@@ -272,5 +270,4 @@ class Host(Utility):
         message += self.text_format(' |')
         message += self.text_format(f' {unknown_10} {unknown_11}', TextStyle.LIGHT)
 
-        # self.display_info = True
         return message

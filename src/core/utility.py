@@ -32,7 +32,7 @@ class Utility:
         :param raw_data_copy: Copy of the data in bytes.
 
         :type actions: dict
-        :param actions: Matrix with the relationship between the ID package and the function.
+        :param actions: Matrix with the relationship between the ID packet and the function.
 
         :rtype: None
         :return: Nothing.
@@ -45,7 +45,7 @@ class Utility:
 
     def _start(self) -> None:
         """
-        Start the parse of the packages.
+        Start the parse of the packets.
 
         :rtype: None
         :return: Nothing.
@@ -53,16 +53,15 @@ class Utility:
         if len(self.raw_data_copy) == 0:
             return
 
-        id_package, = unpack('<h', self._get_data(2))
-        if id_package in self.actions.keys():
-            message = self.actions.get(id_package)()
+        packet_id, = unpack('<h', self._get_data(2))
+        if packet_id in self.actions.keys():
+            message = self.actions.get(packet_id)()
             self._display_message(message)
         else:
-            # self.display_info = True
             if self.display_info:
-                id_hex = hex(id_package)
+                hex_id = hex(packet_id)
                 print(f'{self.request.upper()}'
-                      f' | ID {id_hex}'
+                      f' | ID {hex_id}'
                       f' | {self.raw_data.hex()}'
                       )
             return
