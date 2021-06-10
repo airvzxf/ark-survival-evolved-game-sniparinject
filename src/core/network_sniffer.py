@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-Start to sniff of the network.
+Start the sniff of the network packets.
 """
 from importlib import reload
 
@@ -15,9 +15,9 @@ from game.mana_plus import game
 
 
 # pylint: disable=too-few-public-methods
-class SniffNetwork:
+class NetworkSniffer:
     """
-    Init sniff of the network for spy the packages.
+    Init the sniff of the network for spy the packets.
     """
 
     def __init__(self, interface: str, host: str, port: str) -> None:
@@ -76,5 +76,5 @@ class SniffNetwork:
                 reload(game)
                 game.Game(self.host, packet)
             except Exception as error:
-                message = Utility.text_error_format(f'Error Sniff Network: {error}')
+                message = Utility.text_error_format(f'Error Network Sniffer: {error}')
                 print(message)

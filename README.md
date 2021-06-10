@@ -1,7 +1,7 @@
 # ARK Game
 
 Intercept and read the network packages to find information about the game, but
-it could be useful for any sniff network. This project is work in progress.
+it could be useful for any network sniffer. This project is work in progress.
 Reefer to the [To-Do's][todo] list to check what is done and what is coming.
 
 ## Usage
@@ -37,7 +37,7 @@ sudo python3 main.py
 It is for the game `Mana Plus`, but it is helpful in the middle time that I
 finish the modules for `Ark Evolve`.
 
-[![asciicast](https://asciinema.org/a/R0mxcmrpWHzX96NDJyc7kyTDB.svg)](https://asciinema.org/a/R0mxcmrpWHzX96NDJyc7kyTDB)
+[![asciicast][ascii-mana-image]][ascii-mana-link]
 
 ## Parse of Packages
 
@@ -95,3 +95,7 @@ Enjoy!
 
 
 [todo]: ./TODO.md
+
+[ascii-mana-image]: https://asciinema.org/a/R0mxcmrpWHzX96NDJyc7kyTDB.svg
+
+[ascii-mana-link]: https://asciinema.org/a/R0mxcmrpWHzX96NDJyc7kyTDB
