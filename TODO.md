@@ -2,8 +2,6 @@
 
 ## General
 
-- [ ] GitHub Action CodeQL: Remove uncommented code from
-  `.github/workflows/code-ql.yml`.
 - [ ] `ELF64` binary file in Linux
     - [ ] Create executable file in Linux.
     - [ ] Build the executable file in the GitHub workflows.
