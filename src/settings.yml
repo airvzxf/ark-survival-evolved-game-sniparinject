@@ -1,6 +1,362 @@
+%YAML 1.1
+---
 Network:
   interface: enp4s0
 
 Server:
   host: 52.174.196.146
   port: 5122
+
+Game:
+  node:
+    display_message: Yes
+    references:
+      player_actions: &node_player_actions
+        0x2: 'Sit down'
+        0x3: 'Stan up'
+        0x7: 'Attack'
+      shop_options: &node_shop_options
+        0x0: 'Buy'
+        0x1: 'Sell'
+    actions:
+      0x7d:
+        title: Scenario change
+      0x85:
+        title: Player move to
+        display_message: Yes
+        structs:
+          - type: chars
+            size: 3
+            output:
+              type: hex
+      0x89:
+        title: Player action
+        structs:
+          - name: Target
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: ID
+            type: unsigned char
+            reference: *node_player_actions
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0x90:
+        title: NPC dialog open
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: Sub-dialog
+            type: chars
+            size: 1
+            output:
+              type: hex
+      0x94:
+        title: Character visible
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0x9b:
+        title: Player Smash with object
+        structs:
+          - type: chars
+            size: 3
+            output:
+              type: hex
+      0x9f:
+        title: Player pick up an item
+        structs:
+          - name: ID
+            type: unsigned char
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 3
+            output:
+              type: hex
+      0xb8:
+        title: NPC Dialog conversation
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: Sub-dialog
+            type: chars
+            size: 1
+            output:
+              type: hex
+      0xb9:
+        title: NPC Dialog next
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0xbf:
+        title: Communicate with the server [0xbf]
+        structs:
+          - type: chars
+            size: 1
+            output:
+              type: hex
+      0xc5:
+        title: Shop store
+        structs:
+          - name: Target
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: ID
+            type: unsigned char
+            reference: *node_shop_options
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0xc8:
+        title: Shop buy item
+        structs:
+          - type: chars
+            size: 2
+            output:
+              type: hex
+          - name: Quantity
+            type: unsigned short
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: ID
+            type: unsigned short
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0xc9:
+        title: Shop shell item
+        structs:
+          - type: chars
+            size: 2
+            output:
+              type: hex
+          - name: ID
+            type: unsigned short
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: Quantity
+            type: unsigned short
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0x118:
+        title: NPC was killed
+      0x146:
+        title: NPC Dialog close
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+      0x210:
+        title: Communicate with the server [0x210]
+  host:
+    display_message: Yes
+    references:
+      npc_monster: &host_npc_monster
+        0x459: 'Pollett'
+        0x3fc: 'Fluffy'
+        0x445: 'White Smile'
+        0x447: 'White Bell'
+    actions:
+      0x78:
+        title: NPC Info
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 1
+            output:
+              type: hex
+          - type: chars
+            size: 1
+            output:
+              type: hex
+          - type: chars
+            size: 6
+            output:
+              type: hex
+          - name: Type
+            type: unsigned short
+            reference: *host_npc_monster
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 16
+            output:
+              type: hex
+          - name: HP
+            type: unsigned short
+          - type: chars
+            size: 2
+            output:
+              type: hex
+          - name: Max HP
+            type: unsigned short
+          - type: chars
+            size: 6
+            output:
+              type: hex
+          - name: XY,XY
+            type: chars
+            size: 5
+            output:
+              type: hex
+          - type: chars
+            size: 5
+            output:
+              type: hex
+      0x7b:
+        title: NPC Move
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 1
+            output:
+              type: hex
+          - type: chars
+            size: 1
+            output:
+              type: hex
+          - type: chars
+            size: 6
+            output:
+              type: hex
+          - name: Type
+            type: unsigned short
+            reference: *host_npc_monster
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 6
+            output:
+              type: hex
+          - type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 10
+            output:
+              type: hex
+          - name: HP
+            type: unsigned short
+          - type: chars
+            size: 2
+            output:
+              type: hex
+          - name: HP
+            type: unsigned short
+          - type: chars
+            size: 6
+            output:
+              type: hex
+          - name: XY,XY
+            type: chars
+            size: 7
+            output:
+              type: hex
+          - type: chars
+            size: 5
+            output:
+              type: hex
+      0x80:
+        title: NPC Monster Check
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 1
+            output:
+              type: hex
+      0x87:
+        title: Player move to
+        structs:
+          - name: ID
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: XY,XY
+            type: chars
+            size: 6
+            output:
+              type: hex
+      0x8a:
+        title: Melee attack
+        structs:
+          - name: Attacker
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - name: Target
+            type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: unsigned int
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: unsigned short
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 2
+            output:
+              type: hex
+          - type: unsigned short
+            output:
+              type: hex
+              auto_zero_fill: Yes
+          - type: chars
+            size: 2
+            output:
+              type: hex
+          - name: Damage
+            type: unsigned short
+            output:
+              fill: 3
+          - type: chars
+            size: 1
+            output:
+              type: hex
+          - type: chars
+            size: 4
+            output:
+              type: hex

@@ -14,7 +14,7 @@ class Settings:
 
     def __init__(self, config_file: str) -> None:
         """
-        Initialize the class.
+        Parse the configuration file and return the settings.
 
         :type config_file: str
         :param config_file: Configuration file in YAML format.
