@@ -256,10 +256,7 @@ class TestGame:
         game._parse_packets()
 
         # Assert
-        mock_print.assert_has_calls([
-            call('NODE | ID 0xa | 1234'),
-            call('     |-> 0a001234')
-        ])
+        mock_print.assert_not_called()
         mock__get_settings.assert_called_once_with()
 
     @patch('core.game.Game._display_message')
