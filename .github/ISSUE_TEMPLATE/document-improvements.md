@@ -1,5 +1,5 @@
 ---
-name: Document improvments
+name: Document improvements
 about: Suggest document improvements related to GitHub or Source Code.
 title: "[DOCUMENT]"
 labels: documentation
