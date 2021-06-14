@@ -23,7 +23,7 @@ Game:
         title: Scenario change
       0x85:
         title: Player move to
-        display_message: No
+        display_message: Yes
         structs:
           - type: chars
             size: 3
@@ -67,8 +67,7 @@ Game:
       0x9b:
         title: Player Smash with object
         structs:
-          - name: Unknown
-            type: chars
+          - type: chars
             size: 3
             output:
               type: hex
@@ -80,8 +79,7 @@ Game:
             output:
               type: hex
               auto_zero_fill: Yes
-          - name: Unknown
-            type: chars
+          - type: chars
             size: 3
             output:
               type: hex
@@ -109,8 +107,7 @@ Game:
       0xbf:
         title: Communicate with the server [0xbf]
         structs:
-          - name: Unknown
-            type: chars
+          - type: chars
             size: 1
             output:
               type: hex
@@ -131,8 +128,7 @@ Game:
       0xc8:
         title: Shop buy item
         structs:
-          - name: Unknown
-            type: chars
+          - type: chars
             size: 2
             output:
               type: hex
@@ -149,8 +145,7 @@ Game:
       0xc9:
         title: Shop shell item
         structs:
-          - name: Unknown
-            type: chars
+          - type: chars
             size: 2
             output:
               type: hex
@@ -266,8 +261,7 @@ Game:
             size: 6
             output:
               type: hex
-          - name: Unknown
-            type: unsigned int
+          - type: unsigned int
             output:
               type: hex
               auto_zero_fill: Yes
@@ -304,8 +298,7 @@ Game:
             output:
               type: hex
               auto_zero_fill: Yes
-          - name: Unknown
-            type: chars
+          - type: chars
             size: 1
             output:
               type: hex
