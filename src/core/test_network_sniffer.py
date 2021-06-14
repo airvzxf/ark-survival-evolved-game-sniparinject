@@ -16,29 +16,41 @@ class TestNetworkSniffer:
     style_error = '\x1b[00;37;41m'
     style_end = '\x1b[0m'
 
-    def test___init__(self):
+    @patch('core.network_sniffer.Settings.get_dictionary')
+    def test___init__(self, mock_settings: MagicMock):
         # Arrange
+        expected_settings_path = 'my-non-settings.yml'
         expected_interface = 'Iceberg'
         expected_host = 'Server to me'
         expected_port = '1234567890'
+        mock_settings.return_value = {
+            'Network': {'interface': expected_interface},
+            'Server': {'host': expected_host, 'port': expected_port},
+        }
 
         # Act
-        network_sniffer = NetworkSniffer(expected_interface, expected_host, expected_port)
+        network_sniffer = NetworkSniffer(expected_settings_path)
 
         # Assert
+        assert network_sniffer.settings_path == expected_settings_path
         assert network_sniffer.interface == expected_interface
         assert network_sniffer.host == expected_host
         assert network_sniffer.port == expected_port
 
+    @patch('core.network_sniffer.Settings.get_dictionary')
     @patch('core.network_sniffer.sniff')
-    def test_start(self, mock_sniff: MagicMock):
+    def test_start(self, mock_sniff: MagicMock, mock_settings: MagicMock):
         # Arrange
         expected_interface = 'Touch me'
         expected_host = 'Hosting'
         expected_port = '9990666'
+        mock_settings.return_value = {
+            'Network': {'interface': expected_interface},
+            'Server': {'host': expected_host, 'port': expected_port},
+        }
 
         # Act
-        network_sniffer = NetworkSniffer(expected_interface, expected_host, expected_port)
+        network_sniffer = NetworkSniffer('any-settings.yml')
         network_sniffer.start()
 
         # Assert
@@ -49,67 +61,54 @@ class TestNetworkSniffer:
             prn=network_sniffer._sniff_data
         )
 
-    @patch('core.network_sniffer.reload')
-    def test__sniff_data_request_without_data(self, mock_reload: MagicMock):
+    @patch('core.network_sniffer.Settings.get_dictionary')
+    @patch('core.network_sniffer.Game')
+    def test__sniff_data_request_without_data(self, mock_game: MagicMock, mock_settings: MagicMock):
         # Arrange
+        mock_settings.return_value = {
+            'Network': {'interface': ''},
+            'Server': {'host': '', 'port': 0},
+        }
+
         # Act
-        network_sniffer = NetworkSniffer('', '', '')
+        network_sniffer = NetworkSniffer('')
         network_sniffer._sniff_data(TCP())
 
         # Assert
-        mock_reload.assert_not_called()
+        mock_game.assert_not_called()
 
-    @patch('core.network_sniffer.reload')
-    def test__sniff_data_request_without_tcp(self, mock_reload: MagicMock):
+    @patch('core.network_sniffer.Settings.get_dictionary')
+    @patch('core.network_sniffer.Game')
+    def test__sniff_data_request_without_tcp(self, mock_game: MagicMock, mock_settings: MagicMock):
         # Arrange
+        mock_settings.return_value = {
+            'Network': {'interface': ''},
+            'Server': {'host': '', 'port': 0},
+        }
+
         # Act
-        network_sniffer = NetworkSniffer('', '', '')
+        network_sniffer = NetworkSniffer('')
         network_sniffer._sniff_data(Raw(b'\xff'))
 
         # Assert
-        mock_reload.assert_not_called()
+        mock_game.assert_not_called()
 
-    @patch('core.network_sniffer.game')
-    @patch('core.network_sniffer.reload')
-    def test__sniff_data_reload_game(self, mock_reload: MagicMock, mock_game: MagicMock):
+    @patch('core.network_sniffer.Settings.get_dictionary')
+    @patch('core.network_sniffer.Game')
+    def test__sniff_data_class_game(self, mock_game: MagicMock, mock_settings: MagicMock):
         # Arrange
-        mock_game.return_value = True
-
-        # Act
-        network_sniffer = NetworkSniffer('', '', '')
-        network_sniffer._sniff_data(TCP() / Raw(b'\xff'))
-
-        # Assert
-        mock_reload.assert_called_once_with(mock_game)
-
-    @patch('core.network_sniffer.game')
-    @patch('core.network_sniffer.reload')
-    def test__sniff_data_class_game(self, mock_reload: MagicMock, mock_game: MagicMock):
-        # Arrange
+        expected_settings_path = 'hello-from-the-other-side.yml'
         expected_host = 'goliath.com'
         expected_packet: Ether = TCP() / Raw(b'\x00\x01\x02')
-        mock_reload.return_value = True
+        mock_settings.return_value = {
+            'Network': {'interface': ''},
+            'Server': {'host': expected_host, 'port': 0},
+        }
 
         # Act
-        network_sniffer = NetworkSniffer('', expected_host, '')
+        network_sniffer = NetworkSniffer(expected_settings_path)
         network_sniffer._sniff_data(expected_packet)
 
         # Assert
-        mock_game.Game.assert_called_once_with(expected_host, expected_packet)
-
-    @patch('builtins.print')
-    @patch('core.network_sniffer.reload')
-    def test__sniff_data_mana_plus_catch_general_error(self, mock_reload: MagicMock, mock_print: MagicMock):
-        # Arrange
-        expected_error = 'Boom!'
-        packet: Ether = TCP() / Raw(b'\x00\x01\x02')
-        mock_reload.side_effect = Exception(expected_error)
-
-        # Act
-        network_sniffer = NetworkSniffer('', '', '')
-        network_sniffer._sniff_data(packet)
-
-        # Assert
-        mock_print.assert_called_once_with(
-            f'{self.style_error}Error Network Sniffer: {expected_error}{self.style_end}'
-        )
+        mock_game.assert_called_once_with(
+            expected_settings_path, expected_host, expected_packet)

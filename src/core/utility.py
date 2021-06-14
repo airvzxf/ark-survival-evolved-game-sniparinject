@@ -3,100 +3,12 @@
 """
 Utilities to handle the parse connection.
 """
-from struct import unpack
-
-from core.text_style import TextStyle
 
 
 class Utility:
     """
-    Sniff the Mana Plus game.
+    Utilities for the sniffer.
     """
-
-    # pylint: disable=too-many-arguments
-    def __init__(self, request: str, display_info: bool,
-                 raw_data: bytes, raw_data_copy: bytes, actions: dict):
-        """
-        Initialize the class.
-
-        :type request: str
-        :param request: Type of request: Host or Node.
-
-        :type display_info: bool
-        :param display_info: Check if it should be display information in console.
-
-        :type raw_data: bytes
-        :param raw_data: Pure data in bytes.
-
-        :type raw_data_copy: bytes
-        :param raw_data_copy: Copy of the data in bytes.
-
-        :type actions: dict
-        :param actions: Matrix with the relationship between the ID packet and the function.
-
-        :rtype: None
-        :return: Nothing.
-        """
-        self.display_info = display_info
-        self.raw_data = raw_data
-        self.raw_data_copy = raw_data_copy
-        self.actions = actions
-        self.request = request
-
-    def _start(self) -> None:
-        """
-        Start the parse of the packets.
-
-        :rtype: None
-        :return: Nothing.
-        """
-        if len(self.raw_data_copy) == 0:
-            return
-
-        packet_id, = unpack('<h', self._get_data(2))
-        if packet_id in self.actions.keys():
-            message = self.actions.get(packet_id)()
-            self._display_message(message)
-        else:
-            if self.display_info:
-                hex_id = hex(packet_id)
-                print(f'{self.request.upper()}'
-                      f' | ID {hex_id}'
-                      f' | {self.raw_data.hex()}'
-                      )
-            return
-
-        if len(self.raw_data_copy) > 0:
-            self._start()
-
-    def _get_data(self, size: int) -> bytes:
-        """
-        Split the data in two parts.
-        The first one is returned the second is updated in the referenced variable.
-
-        :type size: int
-        :param size: Size of data which will split.
-
-        :rtype: bytes
-        :return: The split data.
-        """
-        data = self.raw_data_copy[:size]
-        self.raw_data_copy = self.raw_data_copy[size:]
-
-        return data
-
-    def _display_message(self, message: str) -> None:
-        """
-        Print message in the console.
-
-        :type message: str
-        :param message: Size of data which will split.
-
-        :rtype: None
-        :return: Nothing.
-        """
-        if self.display_info:
-            print(message)
 
     @staticmethod
     def print_format_table() -> None:
@@ -120,47 +32,6 @@ class Utility:
                     ])
                     output += f'\x1b[{text_format}m {text_format} \x1b[0m'
                 print(output)
-
-    def text_format(self, text: str, style: TextStyle = TextStyle.NORMAL) -> str:
-        """
-        Prints the text format for host output.
-
-        Style:
-        - NORMAL = '0'
-        - BOLD = '1'
-        - LIGHT = '2'
-        - ITALIC = '3'
-        - UNDERLINE = '4'
-        - SELECTED = '7'
-        - STRIKETHROUGH = '9'
-        - DOUBLE_UNDERLINE = '21'
-
-        :type text: str
-        :param text: The text which will be format.
-
-        :type style: TextStyle
-        :param style: Set the style of the text.
-
-        :rtype: str
-        :return: The format code.
-        """
-        format_code = ''
-
-        if style == TextStyle.TITLE:
-            format_code += '00;93;'
-
-        if style == TextStyle.NORMAL:
-            format_code += '00;30;'
-
-        if style == TextStyle.BOLD:
-            format_code += '00;37;'
-
-        if style == TextStyle.LIGHT:
-            format_code += '00;96;'
-
-        format_code += '44' if self.request == 'host' else '100'
-
-        return f'\x1b[{format_code}m{text}\x1b[0m'
 
     @staticmethod
     def text_error_format(text: str) -> str:

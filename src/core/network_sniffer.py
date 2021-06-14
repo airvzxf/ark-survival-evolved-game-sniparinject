@@ -3,15 +3,13 @@
 """
 Start the sniff of the network packets.
 """
-from importlib import reload
-
 from scapy.layers.inet import TCP
 from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 from scapy.sendrecv import sniff
 
-from core.utility import Utility
-from game.mana_plus import game
+from core.game import Game
+from core.settings import Settings
 
 
 # pylint: disable=too-few-public-methods
@@ -20,26 +18,31 @@ class NetworkSniffer:
     Init the sniff of the network for spy the packets.
     """
 
-    def __init__(self, interface: str, host: str, port: str) -> None:
+    def __init__(self, settings_path: str) -> None:
         """
-        Initialize the class.
+        Init the sniff of the network for spy the packets.
 
-        :type interface: str
-        :param interface: Network interface in ethernet cable could be en0, enp4s0,
-        on WiFi could be wlp2s0.
-
-        :type host: str
-        :param host: IP of the host means source or destination.
-
-        :type port: str
-        :param port: Connected port of the host.
+        :type settings_path: dict
+        :param settings_path: The path of the YAML file with settings.
 
         :rtype: None
         :return: Nothing.
         """
-        self.interface = interface
-        self.host = host
-        self.port = port
+        self.settings_path = settings_path
+        print()
+        print('=== Settings ===')
+        settings = Settings(settings_path).get_dictionary()
+        print(settings)
+
+        self.interface = settings.get('Network').get('interface')
+        self.host = settings.get('Server').get('host')
+        self.port = settings.get('Server').get('port')
+        print()
+        print('=== Network Sniffer ===')
+        print(f'Interface: {self.interface}')
+        print(f'Host:      {self.host}')
+        print(f'Port:      {self.port}')
+        print()
 
     def start(self) -> None:
         """
@@ -48,11 +51,6 @@ class NetworkSniffer:
         :rtype: None
         :return: Nothing.
         """
-        print(f'Interface: {self.interface}')
-        print(f'Host:      {self.host}')
-        print(f'Port:      {self.port}')
-        print()
-
         sniff(
             iface=self.interface,
             filter=f'host {self.host} and tcp port {self.port}',
@@ -71,10 +69,4 @@ class NetworkSniffer:
         :return: Nothing.
         """
         if packet.haslayer(TCP) and packet.haslayer(Raw):
-            # pylint: disable=broad-except
-            try:
-                reload(game)
-                game.Game(self.host, packet)
-            except Exception as error:
-                message = Utility.text_error_format(f'Error Network Sniffer: {error}')
-                print(message)
+            Game(self.settings_path, self.host, packet).start()
