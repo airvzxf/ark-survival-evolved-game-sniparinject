@@ -12,9 +12,13 @@
         - [ ] Documentation for the different options in settings.
             - [ ] Types: [Python Structs][structs].
             - [ ] Linux: Man page.
-    - [ ] Extract the core and only have the module game with the `Ark`
-      classes.
-    - [ ] Extract the `Mana Plus` logic and create it own repository.
+    - [ ] Add injection of packages.
+        - [ ] Run a thread which capture the keyboard events and do some
+          injections.
+    - [ ] Add screen filter. Keep internally the outputs and provide commands
+      to the user to search specific outputs.
+    - [ ] Generate the setting's file for `ARK: Survival Evolved Game`.
+    - [ ] Extract the `Mana Plus` setting's and create its own repository.
 
 ## Feature
 

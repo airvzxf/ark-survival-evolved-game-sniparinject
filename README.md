@@ -305,49 +305,7 @@ Game:
               fill_left: 17
 ```
 
-## Parse of Packages
-
-Increase the parsing of the packages are available for everyone, that you need
-is `git clone` this repository and then go to the directory
-`./src/game/mana_plus` which has two important files: `host.py` and `node. py`.
-The host is handling the packages coming from the server.
-
-### Steps:
-
-Add an action:
-
-```python
-def __init__(self, raw_data: bytes):
-    self.actions = {
-        0x78: self._npc_info,
-        0x87: self._player_move,
-        0x8a: self._fight,
-        0xff: self._NEW_FUNCTION,  # Add here your function. ID package 
-        # usually is an unsigned short integer with 2 bytes with max size
-        # of 0xffff.
-    }
-```
-
-Create the new function:
-
-```python
-def _NEW_FUNCTION(self) -> str:
-    monster_id, unknown_1 = unpack('<Ic', self._get_data(5))
-    monster_id = hex(monster_id).zfill(10)
-    unknown_1 = unknown_1.hex()
-
-    message = self.text_format('<-- NEW FUNCTION', TextStyle.TITLE)
-    message += self.text_format(' |')
-    message += self.text_format(' ID', TextStyle.BOLD)
-    message += self.text_format(f' {monster_id}', TextStyle.LIGHT)
-    message += self.text_format(' |')
-    message += self.text_format(' Unknown', TextStyle.BOLD)
-    message += self.text_format(f' {unknown_1}', TextStyle.LIGHT)
-    # The output for the message variable is:
-    # <-- NEW FUNCTION | ID 0xf03614ab | Unknown 1f
-
-    return message
-```
+## Endian
 
 All the data coming from the network or server usually is big-endian, to read
 this as the game interpretation needs to convert to little-endian. In this

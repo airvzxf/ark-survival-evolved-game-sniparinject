@@ -19,8 +19,8 @@ Follow this simple steps to start the adventure:
     - [Make a pull request][about-pull-requests].
     - [General information][contribute-github].
 
-- Check the [To-Do's list][to-do] to get more familiar with the project idea,
-  and structure.
+- Check the [Read Me file][read-me] and the [To-Do's list][to-do] to get more
+  familiar with the project idea, and structure.
 
 - Optional, we can have a Google meeting to discuss the changes, also we can
   share the screen.
@@ -60,5 +60,7 @@ For developers, it has two options for build the code: Docker or locally.
 [about-pull-requests]: https://help.github.com/articles/about-pull-requests/
 
 [contribute-github]: https://docs.github.com/en/github/collaborating-with-pull-requests
+
+[read-me]: ../README.md
 
 [to-do]: ../TODO.md
