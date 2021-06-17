@@ -1,3 +1,5 @@
+flake8>=3.9.2
 sniparinject>=0.0.0.dev2
 pip>=21.1.2
+pylint>=2.8.3
 setuptools>=57.0.0

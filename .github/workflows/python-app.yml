@@ -35,14 +35,11 @@ jobs:
             pip install flake8 pylint pytest
           fi
 
-      - name: Analyze the code
-        run: |
-          cd ./src
-          find ./ \
-            -type f \
-            -name "*.py" \
-            -and \( -not -path './venv/*' -and -not -path './script/*' -and -not -path './htmlcov/*' \) \
-            -exec pylint '{}' +
+      - name: Set up environment
+        run: ./src/script/setup-dev.bash
+
+      - name: PyLint
+        run: ./src/script/qa-pylint.bash
 
   Flake8:
     runs-on: ubuntu-latest
@@ -69,69 +66,8 @@ jobs:
             pip install flake8 pylint pytest
           fi
 
-      - name: Lint
-        run: |
-          cd ./src
-          flake8 .
+      - name: Set up environment
+        run: ./src/script/setup-dev.bash
 
-  PyTest:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          cd ./src
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            echo ""
-            echo "=== Python: Install requirements from file ==="
-            pip install -r requirements.txt
-          else
-            echo ""
-            echo "=== Python: Install default dependencies ==="
-            pip install flake8 pylint pytest
-          fi
-
-      - name: Test
-        run: |
-          cd ./src
-          pytest .
-
-  Coverage:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          cd ./src
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            echo ""
-            echo "=== Python: Install requirements from file ==="
-            pip install -r requirements.txt
-          else
-            echo ""
-            echo "=== Python: Install default dependencies ==="
-            pip install flake8 pylint pytest
-          fi
-
-      - name: Code
-        run: |
-          cd ./src
-          coverage run 1>/dev/null
-          coverage report
-          coverage html 1>/dev/null
+      - name: Flake8
+        run: ./src/script/qa-flake8.bash

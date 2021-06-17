@@ -41,17 +41,36 @@ this project is very small. My personal email is `israel.alberto.rv@gmail.com`.
 
 ## Build the application
 
-This section is coming soon.
-
 For developers, it has two options for build the code: Docker or locally.
 
 ### Docker
 
-...
+This section is coming soon.
 
 ### Local
 
-...
+The only special Python's packages that you need is `sniparinject`. The
+suggested version of `Python` is `>= 3.9`. Follow the commands to set up and
+install this package.
+
+```bash
+git clone https://github.com/airvzxf/ark-survival-evolved-game-network-packet-sniffer.git
+cd ark-survival-evolved-game-network-packet-sniffer || exit 123
+./src/script/setup-dev.bash
+```
+
+After this setup, it could be easy to activate the vEnv and start to work.
+
+```bash
+# Inside of the GitHub cloned directory.
+cd src || exit 123
+source ./venv/bin/activate
+# Make modification to the source code files (main.py and settings.yml).
+# Run your changes.
+sudo python3 main.py
+# Finally deactivate the vEnv.
+deactivate
+```
 
 [new-issue]: https://github.com/airvzxf/bose-connect-app-linux/issues/new
 
