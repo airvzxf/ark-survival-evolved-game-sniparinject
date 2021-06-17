@@ -54,8 +54,8 @@ suggested version of `Python` is `>= 3.9`. Follow the commands to set up and
 install this package.
 
 ```bash
-git clone https://github.com/airvzxf/ark-survival-evolved-game-network-packet-sniffer.git
-cd ark-survival-evolved-game-network-packet-sniffer || exit 123
+git clone https://github.com/airvzxf/ark-survival-evolved-game-sniparinject.git
+cd ark-survival-evolved-game-sniparinject || exit 123
 ./src/script/setup-dev.bash
 ```
 
