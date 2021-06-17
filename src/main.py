@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-ARK Game: Read the network packets is an effort to use WireShark and scan the packet to know
-your current position and get more information in the play game.
+ARK: Survival Evolved - Game: Intercept and read the network
+packets to find information about the game.
 """
 from sniparinject.network_sniffer import NetworkSniffer
 
