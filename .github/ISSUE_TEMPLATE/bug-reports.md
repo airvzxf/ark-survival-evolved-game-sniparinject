@@ -19,6 +19,8 @@ The version of this application and dependencies.
 
 `python --version`
 
+`python -c "import sniparinject; print(sniparinject.__version__)"`
+
 `python -c "import yaml; print(yaml.__version__)"`
 
 `python -c "import scapy; print(scapy.__version__)"`
