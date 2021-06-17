@@ -25,7 +25,7 @@ The version of this application and dependencies.
 
 ---
 
-**To Reproduce.**
+**To reproduce.**
 
 Steps to reproduce the behavior:
 
